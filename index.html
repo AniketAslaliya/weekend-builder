@@ -1,0 +1,171 @@
+<!doctype html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <link rel="icon" type="image/svg+xml" href="/vite.svg" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Weekend Builder - Turn Every Weekend Into a Building Festival</title>
+    <meta name="description" content="Join thousands of creators in themed weekend hackathons. Build, collaborate, and celebrate amazing projects together in our global building community." />
+    
+    <!-- Preconnect to external domains for performance -->
+    <link rel="preconnect" href="https://fonts.googleapis.com">
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+    <link rel="preconnect" href="https://images.pexels.com">
+    
+    <!-- Optimized font loading with font-display: swap -->
+    <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap" rel="stylesheet">
+    
+    <!-- Open Graph / Facebook -->
+    <meta property="og:type" content="website" />
+    <meta property="og:url" content="https://legendary-kataifi-49d42c.netlify.app/" />
+    <meta property="og:title" content="Weekend Builder - Turn Every Weekend Into a Building Festival" />
+    <meta property="og:description" content="Join thousands of creators in themed weekend hackathons. Build, collaborate, and celebrate amazing projects together." />
+    <meta property="og:image" content="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+    
+    <!-- Twitter -->
+    <meta property="twitter:card" content="summary_large_image" />
+    <meta property="twitter:url" content="https://legendary-kataifi-49d42c.netlify.app/" />
+    <meta property="twitter:title" content="Weekend Builder - Turn Every Weekend Into a Building Festival" />
+    <meta property="twitter:description" content="Join thousands of creators in themed weekend hackathons. Build, collaborate, and celebrate amazing projects together." />
+    <meta property="twitter:image" content="https://images.pexels.com/photos/3184291/pexels-photo-3184291.jpeg?auto=compress&cs=tinysrgb&w=1200" />
+    
+    <!-- Additional SEO meta tags -->
+    <meta name="keywords" content="hackathon, weekend projects, coding, building, community, developers, creators" />
+    <meta name="author" content="Weekend Builder" />
+    <meta name="robots" content="index, follow" />
+    <link rel="canonical" href="https://legendary-kataifi-49d42c.netlify.app/" />
+    
+    <!-- Theme color for mobile browsers -->
+    <meta name="theme-color" content="#0ea5e9" />
+    
+    <!-- Apple touch icon -->
+    <link rel="apple-touch-icon" href="/apple-touch-icon.png" />
+    
+    <!-- Manifest for PWA -->
+    <link rel="manifest" href="/manifest.json" />
+    
+    <!-- Structured data for SEO -->
+    <script type="application/ld+json">
+    {
+      "@context": "https://schema.org",
+      "@type": "WebSite",
+      "name": "Weekend Builder",
+      "description": "Turn every weekend into a building festival. Join themed hackathons and build amazing projects.",
+      "url": "https://legendary-kataifi-49d42c.netlify.app/",
+      "potentialAction": {
+        "@type": "SearchAction",
+        "target": "https://legendary-kataifi-49d42c.netlify.app/projects?search={search_term_string}",
+        "query-input": "required name=search_term_string"
+      }
+    }
+    </script>
+    
+    <!-- Critical CSS inlined for performance -->
+    <style>
+      /* Critical above-the-fold styles */
+      body {
+        margin: 0;
+        font-family: 'Inter', system-ui, sans-serif;
+        background-color: #0d1117;
+        color: #f8fafc;
+      }
+      
+      /* Loading spinner for initial load */
+      .loading-spinner {
+        display: inline-block;
+        width: 40px;
+        height: 40px;
+        border: 3px solid #374151;
+        border-radius: 50%;
+        border-top-color: #0ea5e9;
+        animation: spin 1s ease-in-out infinite;
+      }
+      
+      @keyframes spin {
+        to { transform: rotate(360deg); }
+      }
+      
+      /* Focus styles for accessibility */
+      *:focus-visible {
+        outline: 2px solid #0ea5e9;
+        outline-offset: 2px;
+      }
+      
+      /* Ensure minimum touch target sizes */
+      button, a, input, select, textarea {
+        min-height: 44px;
+        min-width: 44px;
+      }
+    </style>
+  </head>
+  <body>
+    <div id="splash-root">
+      <style>
+        #splash-root {
+          position: fixed;
+          inset: 0;
+          z-index: 9999;
+          background: linear-gradient(135deg, #0f172a 0%, #1e293b 60%, #fbbf24 100%);
+          display: flex;
+          align-items: center;
+          justify-content: center;
+          flex-direction: column;
+        }
+        .splash-rocket {
+          animation: splash-bounce 1.2s infinite ease-in-out;
+        }
+        @keyframes splash-bounce {
+          0%, 100% { transform: translateY(0); }
+          50% { transform: translateY(-30px); }
+        }
+        .splash-text {
+          color: #fbbf24;
+          font-weight: bold;
+          font-size: 1.5rem;
+          margin-top: 1.5rem;
+          letter-spacing: 0.05em;
+          text-shadow: 0 2px 8px #0008;
+        }
+        .splash-sub {
+          color: #fff8;
+          font-size: 0.9rem;
+          margin-top: 0.5rem;
+        }
+      </style>
+      <svg class="splash-rocket" width="80" height="80" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+        <g filter="url(#shadow)">
+          <path d="M32 6C33.1046 6 34 6.89543 34 8V40C34 41.1046 33.1046 42 32 42C30.8954 42 30 41.1046 30 40V8C30 6.89543 30.8954 6 32 6Z" fill="#fbbf24"/>
+          <path d="M32 6C33.1046 6 34 6.89543 34 8V40C34 41.1046 33.1046 42 32 42C30.8954 42 30 41.1046 30 40V8C30 6.89543 30.8954 6 32 6Z" fill="#f59e42" fill-opacity="0.5"/>
+          <ellipse cx="32" cy="48" rx="8" ry="4" fill="#60a5fa" fill-opacity="0.7"/>
+          <ellipse cx="32" cy="48" rx="8" ry="4" fill="#3b82f6" fill-opacity="0.3"/>
+          <path d="M32 42L36 54L32 52L28 54L32 42Z" fill="#f59e42"/>
+          <path d="M32 42L36 54L32 52L28 54L32 42Z" fill="#fbbf24" fill-opacity="0.5"/>
+        </g>
+        <defs>
+          <filter id="shadow" x="0" y="0" width="64" height="64" filterUnits="userSpaceOnUse" color-interpolation-filters="sRGB">
+            <feDropShadow dx="0" dy="2" stdDeviation="2" flood-color="#000" flood-opacity="0.2"/>
+          </filter>
+        </defs>
+      </svg>
+      <div class="splash-text">Launching your hustle...</div>
+      <div class="splash-sub">Startup mode: ON</div>
+    </div>
+    <div id="root"></div>
+    <script type="module" src="/src/main.tsx"></script>
+    
+    <!-- Service worker registration for PWA -->
+    <script>
+      if ('serviceWorker' in navigator) {
+        window.addEventListener('load', () => {
+          navigator.serviceWorker.register('/sw.js')
+            .then((registration) => {
+              console.log('SW registered: ', registration);
+            })
+            .catch((registrationError) => {
+              console.log('SW registration failed: ', registrationError);
+            });
+        });
+      }
+    </script>
+  </body>
+</html>
