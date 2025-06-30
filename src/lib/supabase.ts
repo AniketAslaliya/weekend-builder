@@ -15,8 +15,10 @@ const validateEnvVars = () => {
     return false;
   }
   
-  if (supabaseUrl === 'https://placeholder.supabase.co') {
-    console.warn('Using placeholder Supabase URL. Please configure your environment variables.');
+  if (supabaseUrl === 'https://placeholder.supabase.co' || 
+      supabaseUrl === 'your_supabase_project_url' ||
+      supabaseAnonKey === 'your_supabase_anon_key') {
+    console.warn('Using placeholder Supabase configuration. Please configure your environment variables.');
     return false;
   }
   

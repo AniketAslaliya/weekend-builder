@@ -49,14 +49,4 @@ export default defineConfig({
       },
     },
   },
-  // Preload critical resources
-  experimental: {
-    renderBuiltUrl(filename, { hostType }) {
-      if (hostType === 'js') {
-        return { runtime: `window.__assetsPath(${JSON.stringify(filename)})` };
-      } else {
-        return { relative: true };
-      }
-    },
-  },
 });
