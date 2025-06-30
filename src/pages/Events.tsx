@@ -24,6 +24,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { GlassyCard } from '@/components/ui/GlassyCard';
+import { StatCard } from '@/components/ui/StatCard';
+import { PillChip } from '@/components/ui/PillChip';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';
 
@@ -226,7 +229,7 @@ export function Events() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-950">
+    <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -270,7 +273,7 @@ export function Events() {
           className="mb-12 space-y-8"
         >
           {/* Search Bar */}
-          <Card variant="default" className="p-6">
+          <GlassyCard className="p-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <Input
@@ -278,14 +281,14 @@ export function Events() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   icon={<Search className="w-5 h-5" />}
-                  className="text-lg py-4 bg-dark-700 border-dark-600 text-white placeholder-light-400 focus:border-accent-500"
+                  className="text-lg py-4 bg-white text-primary placeholder-dark-400 focus:border-accent-500"
                 />
               </div>
               <Button variant="outline" size="lg" icon={<Filter className="w-5 h-5" />}>
                 Advanced Filters
               </Button>
             </div>
-          </Card>
+          </GlassyCard>
 
           {/* Filter Tabs */}
           <div className="flex flex-wrap gap-3">
@@ -298,7 +301,7 @@ export function Events() {
                 className={`flex items-center space-x-2 px-4 py-2 rounded-lg font-medium transition-all duration-200 ${
                   selectedFilter === filter.id
                     ? 'bg-accent-600 text-white'
-                    : 'bg-dark-800 text-light-300 border border-dark-700 hover:border-accent-600 hover:text-accent-400'
+                    : 'bg-white/10 backdrop-blur text-light-300 border border-accent-400/20 hover:border-accent-600 hover:text-accent-400'
                 }`}
               >
                 <span>{filter.label}</span>
@@ -313,7 +316,7 @@ export function Events() {
           </div>
 
           {/* Category Filter */}
-          <Card variant="default" className="p-6">
+          <GlassyCard className="p-6">
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-white flex items-center">
                 <Trophy className="w-5 h-5 mr-2 text-accent-400" />
@@ -329,7 +332,7 @@ export function Events() {
                     className={`px-4 py-2 rounded-lg text-sm font-medium transition-all duration-200 ${
                       selectedCategory === category.id
                         ? 'bg-accent-600 text-white'
-                        : 'bg-dark-800 text-light-300 border border-dark-700 hover:border-accent-600 hover:text-accent-400'
+                        : 'bg-white/10 backdrop-blur text-light-300 border border-accent-400/20 hover:border-accent-600 hover:text-accent-400'
                     }`}
                   >
                     {category.label}
@@ -337,7 +340,7 @@ export function Events() {
                 ))}
               </div>
             </div>
-          </Card>
+          </GlassyCard>
         </motion.div>
 
         {/* Results Header */}
@@ -364,9 +367,9 @@ export function Events() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 layout
               >
-                <Card hover className="h-full group overflow-hidden cursor-pointer" onClick={() => handleEventClick(event.id)}>
+                <GlassyCard className="h-full group overflow-hidden cursor-pointer hover:scale-105 transition-transform" onClick={() => handleEventClick(event.id)}>
                   {/* Event Banner */}
-                  <div className="aspect-video relative overflow-hidden">
+                  <div className="aspect-video relative overflow-hidden rounded-xl mb-6">
                     <img
                       src={event.bannerUrl}
                       alt={event.title}
@@ -395,13 +398,11 @@ export function Events() {
                           </Badge>
                         )}
                       </div>
-                      <Badge variant="primary" size="sm">
-                        {event.category}
-                      </Badge>
+                      <PillChip>{event.category}</PillChip>
                     </div>
                   </div>
 
-                  <CardContent className="space-y-6 text-light-200">
+                  <div className="space-y-6 text-light-200">
                     {/* Title & Description */}
                     <div>
                       <h3 className="text-2xl font-bold text-white mb-3">
@@ -452,9 +453,7 @@ export function Events() {
                       </div>
                       <div className="flex flex-wrap gap-2">
                         {event.prizes.slice(0, 2).map((prize, index) => (
-                          <Badge key={index} variant="primary" size="sm">
-                            {prize}
-                          </Badge>
+                          <PillChip key={index}>{prize}</PillChip>
                         ))}
                         {event.prizes.length > 2 && (
                           <Badge variant="gray" size="sm">
@@ -466,7 +465,7 @@ export function Events() {
 
                     {/* Winners Section for Completed Events */}
                     {event.status === 'completed' && event.winners && (
-                      <div className="space-y-3 pt-4 border-t border-dark-700">
+                      <div className="space-y-3 pt-4 border-t border-accent-400/20">
                         <h5 className="font-bold text-white flex items-center">
                           <Crown className="w-4 h-4 mr-2 text-warning-500" />
                           Winners:
@@ -491,7 +490,7 @@ export function Events() {
                     )}
 
                     {/* Action Button */}
-                    <div className="pt-4 border-t border-dark-700">
+                    <div className="pt-4 border-t border-accent-400/20">
                       {event.status === 'active' ? (
                         <Button variant="primary" size="lg" className="w-full" glow>
                           <Zap className="w-5 h-5 mr-2" />
@@ -512,8 +511,8 @@ export function Events() {
                         </Button>
                       )}
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </GlassyCard>
               </motion.div>
             ))}
           </div>
@@ -527,7 +526,7 @@ export function Events() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center py-20"
           >
-            <Card variant="default" className="max-w-md mx-auto p-12">
+            <GlassyCard className="max-w-md mx-auto p-12">
               <div className="w-20 h-20 bg-accent-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="w-10 h-10 text-white" />
               </div>
@@ -550,7 +549,7 @@ export function Events() {
                 <Calendar className="w-5 h-5 mr-2" />
                 Show All Events
               </Button>
-            </Card>
+            </GlassyCard>
           </motion.div>
         )}
 
@@ -561,7 +560,7 @@ export function Events() {
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-center mt-20"
         >
-          <Card variant="default" className="max-w-2xl mx-auto p-12">
+          <GlassyCard className="max-w-2xl mx-auto p-12">
             <div className="text-6xl mb-6">🎉</div>
             <h3 className="text-3xl font-bold text-white mb-4">
               Ready to Start Building?
@@ -579,7 +578,7 @@ export function Events() {
                 Browse Projects
               </Button>
             </div>
-          </Card>
+          </GlassyCard>
         </motion.div>
       </div>
     </div>

@@ -21,6 +21,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { GlassyCard } from '@/components/ui/GlassyCard';
+import { StatCard } from '@/components/ui/StatCard';
+import { PillChip } from '@/components/ui/PillChip';
 import { ProjectSubmissionModal } from '@/components/ui/ProjectSubmissionModal';
 
 export function AIBuilder() {
@@ -202,7 +205,7 @@ export default App;`;
   };
 
   return (
-    <div className="min-h-screen bg-dark-950">
+    <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -234,78 +237,74 @@ export default App;`;
             className="lg:col-span-2 space-y-8"
           >
             {/* Project Idea Input */}
-            <Card variant="glass" className="p-8">
-              <CardHeader>
+            <GlassyCard className="p-8">
+              <div>
                 <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
                   <Sparkles className="w-6 h-6 mr-2 text-accent-400" />
                   describe your project
                 </h2>
-              </CardHeader>
-              <CardContent className="space-y-6">
+              </div>
+              <div className="space-y-6">
                 <div>
                   <Input
                     placeholder="e.g., a task management app with ai-powered prioritization..."
                     value={projectIdea}
                     onChange={(e) => setProjectIdea(e.target.value)}
-                    className="text-lg py-4 bg-dark-800 border-dark-700 text-white placeholder-light-400 focus:border-accent-500"
+                    className="text-lg py-4 bg-white text-primary placeholder-dark-400 focus:border-accent-500"
                   />
                   <p className="text-sm text-light-400 mt-2">
                     be as detailed as possible. the ai will use this to generate your project structure.
                   </p>
                 </div>
-              </CardContent>
-            </Card>
+              </div>
+            </GlassyCard>
 
             {/* Template Selection */}
-            <Card variant="glass" className="p-8">
-              <CardHeader>
+            <GlassyCard className="p-8">
+              <div>
                 <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
                   <Wand2 className="w-6 h-6 mr-2 text-accent-400" />
                   choose template
                 </h2>
-              </CardHeader>
-              <CardContent>
-                <div className="grid gap-4">
-                  {templates.map((template) => {
-                    const Icon = template.icon;
-                    return (
-                      <motion.button
-                        key={template.id}
-                        whileHover={{ scale: 1.02 }}
-                        whileTap={{ scale: 0.98 }}
-                        onClick={() => setSelectedTemplate(template.id)}
-                        className={`p-6 rounded-xl border-2 transition-all duration-300 text-left ${
-                          selectedTemplate === template.id
-                            ? 'border-accent-500 bg-accent-500/10'
-                            : 'border-dark-700 bg-dark-800 hover:border-accent-600/50'
-                        }`}
-                      >
-                        <div className="flex items-start space-x-4">
-                          <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${template.color} flex items-center justify-center`}>
-                            <Icon className="w-6 h-6 text-white" />
-                          </div>
-                          <div className="flex-1">
-                            <h3 className="text-lg font-bold text-white mb-2">
-                              {template.title}
-                            </h3>
-                            <p className="text-light-300 text-sm mb-3">
-                              {template.description}
-                            </p>
-                            <div className="flex flex-wrap gap-2">
-                              {template.features.map((feature, index) => (
-                                <Badge key={index} variant="gray" size="sm">
-                                  {feature}
-                                </Badge>
-                              ))}
-                            </div>
+              </div>
+              <div className="grid gap-4">
+                {templates.map((template) => {
+                  const Icon = template.icon;
+                  return (
+                    <motion.button
+                      key={template.id}
+                      whileHover={{ scale: 1.02 }}
+                      whileTap={{ scale: 0.98 }}
+                      onClick={() => setSelectedTemplate(template.id)}
+                      className={`p-6 rounded-xl border-2 transition-all duration-300 text-left ${
+                        selectedTemplate === template.id
+                          ? 'border-accent-500 bg-accent-500/10'
+                          : 'border-accent-400/20 bg-white/5 backdrop-blur hover:border-accent-600/50'
+                      }`}
+                    >
+                      <div className="flex items-start space-x-4">
+                        <div className={`w-12 h-12 rounded-xl bg-gradient-to-r ${template.color} flex items-center justify-center`}>
+                          <Icon className="w-6 h-6 text-white" />
+                        </div>
+                        <div className="flex-1">
+                          <h3 className="text-lg font-bold text-white mb-2">
+                            {template.title}
+                          </h3>
+                          <p className="text-light-300 text-sm mb-3">
+                            {template.description}
+                          </p>
+                          <div className="flex flex-wrap gap-2">
+                            {template.features.map((feature, index) => (
+                              <PillChip key={index}>{feature}</PillChip>
+                            ))}
                           </div>
                         </div>
-                      </motion.button>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+                      </div>
+                    </motion.button>
+                  );
+                })}
+              </div>
+            </GlassyCard>
 
             {/* Action Buttons */}
             <div className="flex flex-col sm:flex-row gap-4">
@@ -345,8 +344,8 @@ export default App;`;
 
             {/* Generated Code Output */}
             {generatedCode && (
-              <Card variant="glass" className="p-8">
-                <CardHeader>
+              <GlassyCard className="p-8">
+                <div>
                   <div className="flex items-center justify-between">
                     <h2 className="text-2xl font-bold text-white flex items-center">
                       <Code2 className="w-6 h-6 mr-2 text-accent-400" />
@@ -371,15 +370,13 @@ export default App;`;
                       </Button>
                     </div>
                   </div>
-                </CardHeader>
-                <CardContent>
-                  <div className="bg-dark-900 rounded-lg p-6 overflow-x-auto">
-                    <pre className="text-sm text-light-200 whitespace-pre-wrap">
-                      <code>{generatedCode}</code>
-                    </pre>
-                  </div>
-                </CardContent>
-              </Card>
+                </div>
+                <div className="bg-dark-900 rounded-lg p-6 overflow-x-auto">
+                  <pre className="text-sm text-light-200 whitespace-pre-wrap">
+                    <code>{generatedCode}</code>
+                  </pre>
+                </div>
+              </GlassyCard>
             )}
 
             {/* Action Buttons for Generated Code */}
@@ -408,82 +405,78 @@ export default App;`;
             className="space-y-8"
           >
             {/* Saved Projects */}
-            <Card variant="glass" className="p-6">
-              <CardHeader>
+            <GlassyCard className="p-6">
+              <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center">
                   <Save className="w-5 h-5 mr-2 text-accent-400" />
                   saved projects ({savedProjects.length})
                 </h2>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-4">
-                  {savedProjects.map((project) => (
-                    <div key={project.id} className="p-4 bg-dark-800 rounded-lg">
-                      <div className="flex items-start justify-between mb-2">
-                        <h3 className="font-semibold text-white">{project.title}</h3>
-                        <Badge 
-                          variant={project.status === 'completed' ? 'success' : 'gray'} 
-                          size="sm"
-                        >
-                          {project.status}
-                        </Badge>
-                      </div>
-                      <p className="text-sm text-light-400 mb-3">{project.description}</p>
-                      <div className="flex items-center justify-between text-xs text-light-500">
-                        <span>{project.createdAt}</span>
-                        <span>{templates.find(t => t.id === project.template)?.title}</span>
-                      </div>
+              </div>
+              <div className="space-y-4">
+                {savedProjects.map((project) => (
+                  <div key={project.id} className="p-4 bg-white/5 backdrop-blur rounded-lg border border-accent-400/20">
+                    <div className="flex items-start justify-between mb-2">
+                      <h3 className="font-semibold text-white">{project.title}</h3>
+                      <Badge 
+                        variant={project.status === 'completed' ? 'success' : 'gray'} 
+                        size="sm"
+                      >
+                        {project.status}
+                      </Badge>
                     </div>
-                  ))}
-                  
-                  {savedProjects.length === 0 && (
-                    <div className="text-center py-8">
-                      <Code2 className="w-12 h-12 text-dark-600 mx-auto mb-4" />
-                      <p className="text-light-400">no saved projects yet</p>
-                      <p className="text-sm text-light-500">generate your first project to get started</p>
+                    <p className="text-sm text-light-400 mb-3">{project.description}</p>
+                    <div className="flex items-center justify-between text-xs text-light-500">
+                      <span>{project.createdAt}</span>
+                      <span>{templates.find(t => t.id === project.template)?.title}</span>
                     </div>
-                  )}
-                </div>
-              </CardContent>
-            </Card>
+                  </div>
+                ))}
+                
+                {savedProjects.length === 0 && (
+                  <div className="text-center py-8">
+                    <Code2 className="w-12 h-12 text-dark-600 mx-auto mb-4" />
+                    <p className="text-light-400">no saved projects yet</p>
+                    <p className="text-sm text-light-500">generate your first project to get started</p>
+                  </div>
+                )}
+              </div>
+            </GlassyCard>
 
             {/* AI Features */}
-            <Card variant="glass" className="p-6">
-              <CardHeader>
+            <GlassyCard className="p-6">
+              <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center">
                   <Brain className="w-5 h-5 mr-2 text-accent-400" />
                   ai features
                 </h2>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-6">
-                  {aiFeatures.map((feature, index) => {
-                    const Icon = feature.icon;
-                    return (
-                      <motion.div
-                        key={index}
-                        initial={{ opacity: 0, x: -20 }}
-                        animate={{ opacity: 1, x: 0 }}
-                        transition={{ duration: 0.6, delay: index * 0.1 }}
-                        className="flex items-start space-x-4"
-                      >
-                        <div className="w-10 h-10 bg-accent-600 rounded-lg flex items-center justify-center flex-shrink-0">
-                          <Icon className="w-5 h-5 text-white" />
-                        </div>
-                        <div>
-                          <h3 className="text-lg font-bold text-white mb-2">
-                            {feature.title}
-                          </h3>
-                          <p className="text-light-300 text-sm">
-                            {feature.description}
-                          </p>
-                        </div>
-                      </motion.div>
-                    );
-                  })}
-                </div>
-              </CardContent>
-            </Card>
+              </div>
+              <div className="space-y-6">
+                {aiFeatures.map((feature, index) => {
+                  const Icon = feature.icon;
+                  return (
+                    <motion.div
+                      key={index}
+                      initial={{ opacity: 0, x: -20 }}
+                      animate={{ opacity: 1, x: 0 }}
+                      transition={{ duration: 0.6, delay: index * 0.1 }}
+                      className="flex items-start space-x-4"
+                    >
+                      <div className="w-10 h-10 bg-accent-600 rounded-lg flex items-center justify-center flex-shrink-0">
+                        <Icon className="w-5 h-5 text-white" />
+                      </div>
+                      <div>
+                        <h3 className="text-lg font-bold text-white mb-2">
+                          {feature.title}
+                        </h3>
+                        <p className="text-light-300 text-sm">
+                          {feature.description}
+                        </p>
+                      </div>
+                    </motion.div>
+                  );
+                })}
+              </div>
+            </GlassyCard>
           </motion.div>
         </div>
 
@@ -494,7 +487,7 @@ export default App;`;
           transition={{ duration: 0.8, delay: 0.3 }}
           className="text-center mt-16"
         >
-          <Card variant="glass" className="max-w-2xl mx-auto p-12">
+          <GlassyCard className="max-w-2xl mx-auto p-12">
             <Rocket className="w-16 h-16 text-accent-400 mx-auto mb-6" />
             <h3 className="text-3xl font-bold text-white mb-4">
               ready to build the future?
@@ -512,7 +505,7 @@ export default App;`;
                 share project
               </Button>
             </div>
-          </Card>
+          </GlassyCard>
         </motion.div>
       </div>
 

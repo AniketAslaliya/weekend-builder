@@ -21,6 +21,9 @@ import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { GlassyCard } from '@/components/ui/GlassyCard';
+import { StatCard } from '@/components/ui/StatCard';
+import { PillChip } from '@/components/ui/PillChip';
 
 export function Projects() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -176,7 +179,7 @@ export function Projects() {
   };
 
   return (
-    <div className="min-h-screen bg-dark-950">
+    <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -213,7 +216,7 @@ export function Projects() {
           className="mb-12 space-y-8"
         >
           {/* Search Bar */}
-          <Card variant="glass" className="p-6">
+          <GlassyCard className="p-6">
             <div className="flex flex-col md:flex-row gap-4">
               <div className="flex-1">
                 <Input
@@ -221,14 +224,14 @@ export function Projects() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   icon={<Search className="w-5 h-5" />}
-                  className="text-lg py-4 bg-dark-800 border-dark-700 text-white placeholder-light-400 focus:border-accent-500"
+                  className="text-lg py-4 bg-white text-primary placeholder-dark-400 focus:border-accent-500"
                 />
               </div>
               <Button variant="outline" size="lg" icon={<Filter className="w-5 h-5" />}>
                 Advanced Filters
               </Button>
             </div>
-          </Card>
+          </GlassyCard>
 
           {/* Filter Tabs */}
           <div className="flex flex-wrap gap-3">
@@ -243,7 +246,7 @@ export function Projects() {
                   className={`flex items-center space-x-2 px-6 py-3 rounded-xl font-semibold transition-all duration-300 ${
                     selectedFilter === filter.id
                       ? 'bg-accent-600 text-white shadow-lg'
-                      : 'bg-dark-800 text-light-300 border border-dark-700 hover:border-accent-600 hover:text-accent-400 shadow-md hover:shadow-lg'
+                      : 'bg-white/10 backdrop-blur text-light-300 border border-accent-400/20 hover:border-accent-600 hover:text-accent-400 shadow-md hover:shadow-lg'
                   }`}
                 >
                   <Icon className="w-5 h-5" />
@@ -260,7 +263,7 @@ export function Projects() {
           </div>
 
           {/* Tag Filters */}
-          <Card variant="glass" className="p-6">
+          <GlassyCard className="p-6">
             <div className="space-y-4">
               <h3 className="text-lg font-bold text-white flex items-center">
                 <Tag className="w-5 h-5 mr-2 text-accent-400" />
@@ -276,7 +279,7 @@ export function Projects() {
                     className={`px-4 py-2 rounded-xl text-sm font-semibold transition-all duration-300 ${
                       selectedTags.includes(tag)
                         ? 'bg-accent-600 text-white shadow-lg'
-                        : 'bg-dark-800 text-light-300 border border-dark-700 hover:border-accent-600 hover:text-accent-400 shadow-sm hover:shadow-md'
+                        : 'bg-white/10 backdrop-blur text-light-300 border border-accent-400/20 hover:border-accent-600 hover:text-accent-400 shadow-sm hover:shadow-md'
                     }`}
                   >
                     {tag}
@@ -284,7 +287,7 @@ export function Projects() {
                 ))}
               </div>
             </div>
-          </Card>
+          </GlassyCard>
         </motion.div>
 
         {/* Results Header */}
@@ -300,9 +303,7 @@ export function Projects() {
               {selectedTags.length > 0 && (
                 <span className="ml-2">
                   with: {selectedTags.map(tag => (
-                    <Badge key={tag} variant="primary" size="sm" className="ml-1">
-                      {tag}
-                    </Badge>
+                    <PillChip key={tag} className="ml-1">{tag}</PillChip>
                   ))}
                 </span>
               )}
@@ -322,9 +323,9 @@ export function Projects() {
                 transition={{ duration: 0.6, delay: index * 0.1 }}
                 layout
               >
-                <Card hover className="h-full group overflow-hidden" variant="glass">
+                <GlassyCard className="h-full group overflow-hidden hover:scale-105 transition-transform">
                   {/* Project Image */}
-                  <div className="aspect-video relative overflow-hidden">
+                  <div className="aspect-video relative overflow-hidden rounded-xl mb-6">
                     <img
                       src={project.image}
                       alt={project.title}
@@ -370,7 +371,7 @@ export function Projects() {
                     </div>
                   </div>
 
-                  <CardContent className="space-y-6 text-light-200">
+                  <div className="space-y-6 text-light-200">
                     {/* Event Badge */}
                     <Badge variant="primary" size="sm">
                       <Calendar className="w-3 h-3 mr-1" />
@@ -407,9 +408,7 @@ export function Projects() {
                     {/* Tags */}
                     <div className="flex flex-wrap gap-2">
                       {project.tags.slice(0, 3).map(tag => (
-                        <Badge key={tag} variant="gray" size="sm">
-                          {tag}
-                        </Badge>
+                        <PillChip key={tag}>{tag}</PillChip>
                       ))}
                       {project.tags.length > 3 && (
                         <Badge variant="gray" size="sm">
@@ -419,7 +418,7 @@ export function Projects() {
                     </div>
 
                     {/* Stats */}
-                    <div className="flex items-center justify-between pt-4 border-t border-dark-700">
+                    <div className="flex items-center justify-between pt-4 border-t border-accent-400/20">
                       <div className="flex items-center space-x-6 text-light-400">
                         <motion.div 
                           whileHover={{ scale: 1.1 }}
@@ -450,8 +449,8 @@ export function Projects() {
                         {project.projectType}
                       </Badge>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </GlassyCard>
               </motion.div>
             ))}
           </div>
@@ -480,7 +479,7 @@ export function Projects() {
             transition={{ duration: 0.8, delay: 0.2 }}
             className="text-center py-20"
           >
-            <Card variant="glass" className="max-w-md mx-auto p-12">
+            <GlassyCard className="max-w-md mx-auto p-12">
               <div className="w-20 h-20 bg-accent-600 rounded-full flex items-center justify-center mx-auto mb-6">
                 <Search className="w-10 h-10 text-white" />
               </div>
@@ -503,7 +502,7 @@ export function Projects() {
                 <Star className="w-5 h-5 mr-2" />
                 Clear All Filters
               </Button>
-            </Card>
+            </GlassyCard>
           </motion.div>
         )}
       </div>

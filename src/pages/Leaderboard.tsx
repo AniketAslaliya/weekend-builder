@@ -18,6 +18,9 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { GlassyCard } from '@/components/ui/GlassyCard';
+import { StatCard } from '@/components/ui/StatCard';
+import { PillChip } from '@/components/ui/PillChip';
 
 export function Leaderboard() {
   const [selectedPeriod, setSelectedPeriod] = useState('all-time');
@@ -222,8 +225,8 @@ export function Leaderboard() {
   const renderLeaderboardItem = (entry: any, index: number) => {
     if (selectedCategory === 'projects') {
       return (
-        <Card className={`bg-gradient-to-r ${getRankColor(entry.rank)} hover:scale-105 transition-all duration-300`}>
-          <CardContent className="flex items-center justify-between p-6">
+        <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)}`}>
+          <div className="flex items-center justify-between p-6">
             <div className="flex items-center space-x-6">
               <div className="flex items-center justify-center w-16 h-16">
                 {getRankIcon(entry.rank)}
@@ -254,15 +257,15 @@ export function Leaderboard() {
                 </div>
               </div>
             </div>
-          </CardContent>
-        </Card>
+          </div>
+        </GlassyCard>
       );
     }
 
     if (selectedCategory === 'events') {
       return (
-        <Card className={`bg-gradient-to-r ${getRankColor(entry.rank)} hover:scale-105 transition-all duration-300`}>
-          <CardContent className="flex items-center justify-between p-6">
+        <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)}`}>
+          <div className="flex items-center justify-between p-6">
             <div className="flex items-center space-x-6">
               <div className="flex items-center justify-center w-16 h-16">
                 {getRankIcon(entry.rank)}
@@ -291,15 +294,15 @@ export function Leaderboard() {
             <Badge variant="warning" size="lg">
               {entry.winner.prize}
             </Badge>
-          </CardContent>
-        </Card>
+          </div>
+        </GlassyCard>
       );
     }
 
     // Default: Overall/Streak leaderboard
     return (
-      <Card className={`bg-gradient-to-r ${getRankColor(entry.rank)} hover:scale-105 transition-all duration-300`}>
-        <CardContent className="flex items-center justify-between p-6">
+      <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)}`}>
+        <div className="flex items-center justify-between p-6">
           <div className="flex items-center space-x-6">
             <div className="flex items-center justify-center w-16 h-16">
               {getRankIcon(entry.rank)}
@@ -320,9 +323,7 @@ export function Leaderboard() {
               </p>
               <div className="flex flex-wrap gap-1">
                 {entry.specialBadges.slice(0, 2).map((badge: string, badgeIndex: number) => (
-                  <Badge key={badgeIndex} variant="primary" size="sm">
-                    {badge}
-                  </Badge>
+                  <PillChip key={badgeIndex}>{badge}</PillChip>
                 ))}
               </div>
             </div>
@@ -356,13 +357,13 @@ export function Leaderboard() {
               <div className="text-sm text-light-400">badges</div>
             </div>
           </div>
-        </CardContent>
-      </Card>
+        </div>
+      </GlassyCard>
     );
   };
 
   return (
-    <div className="min-h-screen bg-dark-950">
+    <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
       <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-8">
         {/* Header */}
         <motion.div
@@ -393,7 +394,7 @@ export function Leaderboard() {
           className="mb-12 space-y-8"
         >
           {/* Category Filter */}
-          <Card variant="glass" className="p-6">
+          <GlassyCard className="p-6">
             <div className="space-y-6">
               <h3 className="text-lg font-bold text-white flex items-center">
                 <Target className="w-5 h-5 mr-2 text-accent-400" />
@@ -411,7 +412,7 @@ export function Leaderboard() {
                       className={`flex flex-col items-center space-y-3 p-6 rounded-xl font-semibold transition-all duration-300 ${
                         selectedCategory === category.id
                           ? 'bg-accent-600 text-white shadow-lg'
-                          : 'bg-dark-800 text-light-300 border border-dark-700 hover:border-accent-600 hover:text-accent-400'
+                          : 'bg-white/10 backdrop-blur text-light-300 border border-accent-400/20 hover:border-accent-600 hover:text-accent-400'
                       }`}
                     >
                       <Icon className="w-8 h-8" />
@@ -424,10 +425,10 @@ export function Leaderboard() {
                 })}
               </div>
             </div>
-          </Card>
+          </GlassyCard>
 
           {/* Period Filter */}
-          <Card variant="glass" className="p-6">
+          <GlassyCard className="p-6">
             <div className="flex flex-col md:flex-row gap-6">
               <div className="flex-1">
                 <h3 className="text-lg font-bold text-white mb-4 flex items-center">
@@ -444,7 +445,7 @@ export function Leaderboard() {
                       className={`px-4 py-2 rounded-xl font-semibold transition-all duration-300 ${
                         selectedPeriod === period.id
                           ? 'bg-accent-600 text-white shadow-lg'
-                          : 'bg-dark-800 text-light-300 border border-dark-700 hover:border-accent-600 hover:text-accent-400'
+                          : 'bg-white/10 backdrop-blur text-light-300 border border-accent-400/20 hover:border-accent-600 hover:text-accent-400'
                       }`}
                     >
                       {period.label}
@@ -453,7 +454,7 @@ export function Leaderboard() {
                 </div>
               </div>
             </div>
-          </Card>
+          </GlassyCard>
         </motion.div>
 
         {/* Top 3 Podium */}
@@ -477,7 +478,7 @@ export function Leaderboard() {
                   transition={{ duration: 0.6, delay: 0.3 + index * 0.1 }}
                   className={`order-${index + 1} ${actualIndex === 0 ? 'md:-mt-8' : ''}`}
                 >
-                  <Card className={`bg-gradient-to-br ${getRankColor(actualEntry.rank || actualIndex + 1)} text-center p-8 h-full ${actualIndex === 0 ? 'shadow-2xl' : ''}`} glow={actualIndex === 0}>
+                  <GlassyCard className={`text-center p-8 h-full ${actualIndex === 0 ? 'shadow-2xl' : ''} ${getRankColor(actualEntry.rank || actualIndex + 1)}`} glow={actualIndex === 0}>
                     <div className="flex justify-center mb-4">
                       {getRankIcon(actualEntry.rank || actualIndex + 1)}
                     </div>
@@ -549,7 +550,7 @@ export function Leaderboard() {
                         champion
                       </Badge>
                     )}
-                  </Card>
+                  </GlassyCard>
                 </motion.div>
               );
             })}
@@ -587,7 +588,7 @@ export function Leaderboard() {
           transition={{ duration: 0.8, delay: 0.4 }}
           className="text-center mt-16"
         >
-          <Card variant="glass" className="max-w-2xl mx-auto p-12">
+          <GlassyCard className="max-w-2xl mx-auto p-12">
             <Trophy className="w-16 h-16 text-accent-400 mx-auto mb-6" />
             <h3 className="text-3xl font-bold text-white mb-4">
               ready to climb the leaderboard?
@@ -605,7 +606,7 @@ export function Leaderboard() {
                 join next event
               </Button>
             </div>
-          </Card>
+          </GlassyCard>
         </motion.div>
       </div>
     </div>

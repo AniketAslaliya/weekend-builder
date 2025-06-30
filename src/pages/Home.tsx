@@ -19,6 +19,9 @@ import {
 import { Button } from '@/components/ui/Button';
 import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
+import { GlassyCard } from '@/components/ui/GlassyCard';
+import { StatCard } from '@/components/ui/StatCard';
+import { PillChip } from '@/components/ui/PillChip';
 import { ProjectSubmissionModal } from '@/components/ui/ProjectSubmissionModal';
 
 export function Home() {
@@ -268,7 +271,7 @@ export function Home() {
       </section>
 
       {/* Stats Section */}
-      <section className="py-20 bg-dark-900">
+      <section className="py-20 bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <div className="grid grid-cols-2 lg:grid-cols-4 gap-8">
             {stats.map((stat, index) => {
@@ -280,15 +283,12 @@ export function Home() {
                   whileInView={{ opacity: 1, y: 0 }}
                   transition={{ duration: 0.6, delay: index * 0.1 }}
                   whileHover={{ scale: 1.05 }}
-                  className="text-center group"
                 >
-                  <div className="inline-flex items-center justify-center w-16 h-16 bg-accent-600 rounded-2xl mb-4 shadow-lg group-hover:shadow-xl transition-all duration-300">
-                    <Icon className="w-8 h-8 text-white" />
-                  </div>
-                  <div className="text-4xl font-bold text-white mb-2">
-                    {stat.value}
-                  </div>
-                  <div className="text-light-400 font-medium">{stat.label}</div>
+                  <StatCard 
+                    label={stat.label} 
+                    value={stat.value} 
+                    icon={<Icon className="w-6 h-6" />}
+                  />
                 </motion.div>
               );
             })}
@@ -297,7 +297,7 @@ export function Home() {
       </section>
 
       {/* How It Works */}
-      <section className="py-20 bg-dark-950">
+      <section className="py-20 bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -328,7 +328,7 @@ export function Home() {
                   transition={{ duration: 0.6, delay: index * 0.2 }}
                   className="relative"
                 >
-                  <Card hover variant="glass" className="h-full text-center p-8">
+                  <GlassyCard className="h-full text-center p-8 hover:scale-105 transition-transform">
                     <div className="relative mb-6">
                       <div className="inline-flex items-center justify-center w-20 h-20 bg-accent-600 rounded-2xl mb-4 shadow-xl">
                         <Icon className="w-10 h-10 text-white" />
@@ -343,7 +343,7 @@ export function Home() {
                     <p className="text-light-300 leading-relaxed">
                       {step.description}
                     </p>
-                  </Card>
+                  </GlassyCard>
                   
                   {/* Connection line */}
                   {index < howItWorksSteps.length - 1 && (
@@ -357,7 +357,7 @@ export function Home() {
       </section>
 
       {/* Featured Projects */}
-      <section className="py-20 bg-dark-900">
+      <section className="py-20 bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
         <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
           <motion.div
             initial={{ opacity: 0, y: 30 }}
@@ -385,8 +385,8 @@ export function Home() {
                 whileInView={{ opacity: 1, y: 0 }}
                 transition={{ duration: 0.6, delay: index * 0.1 }}
               >
-                <Card hover className="h-full overflow-hidden group">
-                  <div className="aspect-video relative overflow-hidden">
+                <GlassyCard className="h-full overflow-hidden group hover:scale-105 transition-transform">
+                  <div className="aspect-video relative overflow-hidden rounded-xl mb-4">
                     <img
                       src={project.image}
                       alt={project.title}
@@ -407,7 +407,7 @@ export function Home() {
                     </div>
                   </div>
                   
-                  <CardContent className="space-y-4 text-light-200">
+                  <div className="space-y-4 text-light-200">
                     <div>
                       <h3 className="text-2xl font-bold text-white mb-3">
                         {project.title}
@@ -423,14 +423,12 @@ export function Home() {
                       </span>
                       <div className="flex flex-wrap gap-1">
                         {project.tags.map((tag) => (
-                          <Badge key={tag} variant="primary" size="sm">
-                            {tag}
-                          </Badge>
+                          <PillChip key={tag}>{tag}</PillChip>
                         ))}
                       </div>
                     </div>
-                  </CardContent>
-                </Card>
+                  </div>
+                </GlassyCard>
               </motion.div>
             ))}
           </div>
