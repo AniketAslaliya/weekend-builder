@@ -15,7 +15,6 @@ export function LikeButton({ projectId, className = '' }: LikeButtonProps) {
   const [liked, setLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
   const [loading, setLoading] = useState(false);
-  const [error, setError] = useState<string | null>(null);
 
   // Fetch like count and user like status
   useEffect(() => {
@@ -53,7 +52,6 @@ export function LikeButton({ projectId, className = '' }: LikeButtonProps) {
       return;
     }
     setLoading(true);
-    setError(null);
     try {
       if (liked) {
         // Unlike
@@ -80,8 +78,6 @@ export function LikeButton({ projectId, className = '' }: LikeButtonProps) {
           toast.error('Failed to like.');
         }
       }
-    } catch (err) {
-      setError('Failed to like. Please try again.');
     } finally {
       setLoading(false);
     }
@@ -89,7 +85,6 @@ export function LikeButton({ projectId, className = '' }: LikeButtonProps) {
 
   const handleUnlike = async () => {
     setLoading(true);
-    setError(null);
     try {
       // Unlike
       const { error } = await supabase
@@ -103,8 +98,6 @@ export function LikeButton({ projectId, className = '' }: LikeButtonProps) {
       } else {
         toast.error('Failed to unlike.');
       }
-    } catch (err) {
-      setError('Failed to unlike. Please try again.');
     } finally {
       setLoading(false);
     }

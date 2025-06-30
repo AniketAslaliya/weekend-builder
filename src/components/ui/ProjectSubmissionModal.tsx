@@ -2,12 +2,8 @@ import React, { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   X, 
-  Upload, 
   Send, 
   Link as LinkIcon, 
-  Github, 
-  Video, 
-  Image as ImageIcon,
   FileText,
   Users,
   Tag,

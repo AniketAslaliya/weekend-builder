@@ -4,7 +4,6 @@ import { motion } from 'framer-motion';
 import { 
   Home, 
   Calendar, 
-  Upload, 
   User,
   Plus
 } from 'lucide-react';

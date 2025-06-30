@@ -110,8 +110,8 @@ export function Profile() {
               toast.success('Profile created!');
             }
           } else {
-            console.error('Error loading profile:', error);
-            toast.error('failed to load profile');
+          console.error('Error loading profile:', error);
+          toast.error('failed to load profile');
           }
         } else if (data) {
           setEditData({
@@ -341,7 +341,7 @@ export function Profile() {
         {/* Profile Banner & Avatar */}
         <div className="relative flex flex-col items-center justify-center mb-8">
           <div className="w-full h-32 rounded-2xl bg-gradient-to-r from-accent-600 via-accent-400 to-accent-700 mb-[-64px] shadow-lg" />
-          <motion.div
+        <motion.div
             initial={{ opacity: 0, scale: 0.8 }}
             animate={{ opacity: 1, scale: 1 }}
             transition={{ duration: 0.7 }}
@@ -352,8 +352,8 @@ export function Profile() {
                 <img src={editData.avatar_url} alt="avatar" className="w-full h-full object-cover" />
               ) : (
                 <UserCircle className="w-28 h-28 text-accent-400" />
-              )}
-            </div>
+                  )}
+                </div>
             <button
               onClick={openEdit}
               className="absolute right-0 bottom-0 bg-accent-500 text-white rounded-full p-2 shadow-lg hover:bg-accent-600 transition-all border-2 border-white"
@@ -406,8 +406,8 @@ export function Profile() {
                     <p className="text-light-400">Customize your builder identity</p>
                   </div>
                 </div>
-              </div>
-
+                  </div>
+                  
               {/* Avatar Section */}
               <div className="relative z-10 mb-8">
                 <div className="flex flex-col items-center">
@@ -422,8 +422,8 @@ export function Profile() {
                       ) : (
                         <div className="w-full h-full flex items-center justify-center">
                           <UserCircle className="w-20 h-20 text-accent-400" />
-                        </div>
-                      )}
+                      </div>
+                    )}
                     </div>
                     <button 
                       onClick={() => fileInputRef.current?.click()} 
@@ -442,9 +442,9 @@ export function Profile() {
                   <p className="text-light-400 text-sm text-center">
                     Click the camera icon to upload a new avatar
                   </p>
-                </div>
-              </div>
-
+                    </div>
+                  </div>
+                  
               {/* Form */}
               <div className="relative z-10 space-y-6">
                 <div className="grid md:grid-cols-2 gap-6">
@@ -467,7 +467,7 @@ export function Profile() {
                     />
                   </div>
                 </div>
-
+                
                 <div>
                   <label className="block text-sm font-semibold text-accent-400 mb-2">Bio</label>
                   <textarea 
@@ -477,7 +477,7 @@ export function Profile() {
                     rows={3}
                     className="w-full bg-white/10 border border-accent-400/30 rounded-lg p-3 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all resize-none"
                   />
-                </div>
+              </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -488,7 +488,7 @@ export function Profile() {
                       placeholder="github-username" 
                       className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
                     />
-                  </div>
+            </div>
                   <div>
                     <label className="block text-sm font-semibold text-accent-400 mb-2">Twitter</label>
                     <Input 
@@ -497,8 +497,8 @@ export function Profile() {
                       placeholder="twitter-username" 
                       className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
                     />
-                  </div>
-                </div>
+            </div>
+            </div>
 
                 <div className="grid md:grid-cols-2 gap-6">
                   <div>
@@ -509,8 +509,8 @@ export function Profile() {
                       placeholder="linkedin-username" 
                       className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
                     />
-                  </div>
-                  <div>
+          </div>
+                      <div>
                     <label className="block text-sm font-semibold text-accent-400 mb-2">Website</label>
                     <Input 
                       value={editData.website} 
@@ -518,8 +518,8 @@ export function Profile() {
                       placeholder="your-website.com" 
                       className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
                     />
-                  </div>
-                </div>
+                        </div>
+                      </div>
 
                 {/* Skills Section */}
                 <div>
@@ -527,20 +527,20 @@ export function Profile() {
                   <div className="flex flex-wrap gap-2 mb-3">
                     {editData.skills.map((skill, index) => (
                       <PillChip key={index} className="bg-accent-500/20 text-accent-400 border-accent-400/30">
-                        {skill}
-                        <button 
-                          onClick={() => removeSkill(skill)}
+                            {skill}
+                              <button
+                                onClick={() => removeSkill(skill)}
                           className="ml-2 text-accent-400 hover:text-red-400 transition-colors"
-                        >
+                              >
                           ×
-                        </button>
+                              </button>
                       </PillChip>
-                    ))}
-                  </div>
-                  <div className="flex space-x-2">
-                    <Input 
-                      value={newSkill} 
-                      onChange={(e) => setNewSkill(e.target.value)}
+                      ))}
+                    </div>
+                      <div className="flex space-x-2">
+                        <Input
+                          value={newSkill}
+                          onChange={(e) => setNewSkill(e.target.value)}
                       placeholder="Add a skill..." 
                       className="flex-1 bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
                     />
@@ -551,8 +551,8 @@ export function Profile() {
                       disabled={!newSkill.trim()}
                     >
                       Add
-                    </Button>
-                  </div>
+                        </Button>
+                      </div>
                 </div>
 
                 {/* Interests Section */}
@@ -561,20 +561,20 @@ export function Profile() {
                   <div className="flex flex-wrap gap-2 mb-3">
                     {editData.interests.map((interest, index) => (
                       <PillChip key={index} className="bg-purple-500/20 text-purple-400 border-purple-400/30">
-                        {interest}
-                        <button 
-                          onClick={() => removeInterest(interest)}
+                            {interest}
+                              <button
+                                onClick={() => removeInterest(interest)}
                           className="ml-2 text-purple-400 hover:text-red-400 transition-colors"
-                        >
+                              >
                           ×
-                        </button>
+                              </button>
                       </PillChip>
-                    ))}
-                  </div>
-                  <div className="flex space-x-2">
-                    <Input 
-                      value={newInterest} 
-                      onChange={(e) => setNewInterest(e.target.value)}
+                      ))}
+                    </div>
+                      <div className="flex space-x-2">
+                        <Input
+                          value={newInterest}
+                          onChange={(e) => setNewInterest(e.target.value)}
                       placeholder="Add an interest..." 
                       className="flex-1 bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
                     />
@@ -606,12 +606,12 @@ export function Profile() {
                     glow
                   >
                     {saving ? 'Saving...' : 'Save Changes'}
-                  </Button>
-                </div>
+                        </Button>
+                      </div>
               </div>
             </motion.div>
-          </div>
-        )}
+            </div>
+          )}
 
         {/* Stats Cards */}
         <div className="flex flex-wrap gap-6 justify-center mb-8">
@@ -655,20 +655,20 @@ export function Profile() {
                   <div className="text-light-400">No projects yet.</div>
                 ) : (
                   <div className="space-y-4">
-                    {mockProjects.map(project => (
+                  {mockProjects.map(project => (
                       <div key={project.id} className="bg-white/5 rounded-xl p-4 shadow flex flex-col gap-1 border border-accent-400/10">
                         <div className="flex items-center gap-2">
                           <span className="font-semibold text-white">{project.title}</span>
                           <Badge variant="primary" size="sm">{project.status}</Badge>
-                        </div>
+                      </div>
                         <div className="text-light-400 text-xs">{project.description}</div>
                         <div className="flex items-center gap-2 text-xs mt-1">
                           <Heart className="w-4 h-4 text-error-400" /> {project.votes}
                           <span className="text-light-400">{project.createdAt}</span>
                         </div>
-                      </div>
-                    ))}
-                  </div>
+                </div>
+                  ))}
+                </div>
                 )}
               </GlassyCard>
 

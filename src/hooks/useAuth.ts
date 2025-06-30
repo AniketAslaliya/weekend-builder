@@ -1,17 +1,64 @@
 import { useState, useEffect, useCallback } from 'react';
-import { supabase } from '@/lib/supabase';
+
+import { supabase } from '../lib/supabase';
 import type { User, AuthError, Session } from '@supabase/supabase-js';
 import toast from 'react-hot-toast';
+
+const isSupabaseConfigured = import.meta.env.VITE_SUPABASE_URL && 
+                            import.meta.env.VITE_SUPABASE_ANON_KEY &&
+                            import.meta.env.VITE_SUPABASE_URL !== 'https://placeholder.supabase.co';
 
 export function useAuth() {
   const [user, setUser] = useState<User | null>(null);
   const [loading, setLoading] = useState(true);
   const [session, setSession] = useState<Session | null>(null);
 
-  // Check if Supabase is properly configured
-  const isSupabaseConfigured = import.meta.env.VITE_SUPABASE_URL && 
-                              import.meta.env.VITE_SUPABASE_ANON_KEY &&
-                              import.meta.env.VITE_SUPABASE_URL !== 'https://placeholder.supabase.co';
+  const createUserProfile = useCallback(async (user: User) => {
+    if (!isSupabaseConfigured) return;
+    try {
+      // Check if profile already exists
+      const { data: existingProfile, error: checkError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+      if (checkError && checkError.code !== 'PGRST116') {
+        console.error('Error checking existing profile:', checkError);
+        return;
+      }
+      if (existingProfile) {
+        console.log('Profile already exists');
+        return;
+      }
+      // Create new profile
+      const { error } = await supabase
+        .from('profiles')
+        .insert([
+          {
+            id: user.id,
+            display_name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'builder',
+            avatar_url: user.user_metadata?.avatar_url || null,
+            bio: 'passionate builder creating amazing projects',
+            user_type: 'solo',
+            is_mentor: false,
+            total_points: 0,
+            projects_count: 0,
+            votes_given: 0,
+            votes_received: 0
+          }
+        ]);
+      if (error) {
+        console.error('Error creating profile:', error);
+        toast.error('Failed to create user profile');
+      } else {
+        console.log('Profile created successfully');
+        toast.success('Profile created successfully!');
+      }
+    } catch (error) {
+      console.error('Error creating profile:', error);
+      toast.error('Failed to create user profile');
+    }
+  }, [isSupabaseConfigured]);
 
   // Initialize auth state
   useEffect(() => {
@@ -53,7 +100,7 @@ export function useAuth() {
 
     // Listen for auth changes
     const { data: { subscription } } = supabase.auth.onAuthStateChange(
-      async (event, session) => {
+      async (event: string, session: Session | null) => {
         console.log('Auth state changed:', event, session?.user?.id);
         
         if (!mounted) return;
@@ -80,66 +127,15 @@ export function useAuth() {
           // Clear the welcome flag when signing out
           sessionStorage.removeItem('welcomeShown');
         }
-      }
+      },
+      [createUserProfile]
     );
 
     return () => {
       mounted = false;
       subscription.unsubscribe();
     };
-  }, [isSupabaseConfigured]);
-
-  const createUserProfile = useCallback(async (user: User) => {
-    if (!isSupabaseConfigured) return;
-    
-    try {
-      // Check if profile already exists
-      const { data: existingProfile, error: checkError } = await supabase
-        .from('profiles')
-        .select('id')
-        .eq('id', user.id)
-        .single();
-
-      if (checkError && checkError.code !== 'PGRST116') {
-        console.error('Error checking existing profile:', checkError);
-        return;
-      }
-
-      if (existingProfile) {
-        console.log('Profile already exists');
-        return;
-      }
-
-      // Create new profile
-      const { error } = await supabase
-        .from('profiles')
-        .insert([
-          {
-            id: user.id,
-            display_name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'builder',
-            avatar_url: user.user_metadata?.avatar_url || null,
-            bio: 'passionate builder creating amazing projects',
-            user_type: 'solo',
-            is_mentor: false,
-            total_points: 0,
-            projects_count: 0,
-            votes_given: 0,
-            votes_received: 0
-          }
-        ]);
-      
-      if (error) {
-        console.error('Error creating profile:', error);
-        toast.error('Failed to create user profile');
-      } else {
-        console.log('Profile created successfully');
-        toast.success('Profile created successfully!');
-      }
-    } catch (error) {
-      console.error('Error creating profile:', error);
-      toast.error('Failed to create user profile');
-    }
-  }, [isSupabaseConfigured]);
+  }, [isSupabaseConfigured, createUserProfile]);
 
   const signIn = useCallback(async (email: string, password: string) => {
     if (!isSupabaseConfigured) {

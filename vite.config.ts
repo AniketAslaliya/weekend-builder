@@ -49,10 +49,6 @@ export default defineConfig({
       },
     },
   },
-  // Enable compression
-  server: {
-    compress: true,
-  },
   // Preload critical resources
   experimental: {
     renderBuiltUrl(filename, { hostType }) {

@@ -1,15 +1,15 @@
 import { lazy } from 'react';
 
 // Lazy load components for code splitting
-export const LazyHome = lazy(() => import('@/pages/Home').then(module => ({ default: module.default || module.Home })));
-export const LazyAuth = lazy(() => import('@/pages/Auth').then(module => ({ default: module.default || module.Auth })));
-export const LazyProjects = lazy(() => import('@/pages/Projects').then(module => ({ default: module.default || module.Projects })));
-export const LazyEvents = lazy(() => import('@/pages/Events').then(module => ({ default: module.default || module.Events })));
-export const LazyEventDetail = lazy(() => import('@/pages/EventDetail').then(module => ({ default: module.default || module.EventDetail })));
-export const LazyAdminDashboard = lazy(() => import('@/pages/AdminDashboard').then(module => ({ default: module.default || module.AdminDashboard })));
-export const LazyAIBuilder = lazy(() => import('@/pages/AIBuilder').then(module => ({ default: module.default || module.AIBuilder })));
-export const LazyLeaderboard = lazy(() => import('@/pages/Leaderboard').then(module => ({ default: module.default || module.Leaderboard })));
-export const LazyProfile = lazy(() => import('@/pages/Profile').then(module => ({ default: module.default || module.Profile })));
+export const LazyHome = lazy(() => import('@/pages/Home').then(module => ({ default: module.Home })));
+export const LazyAuth = lazy(() => import('@/pages/Auth').then(module => ({ default: module.Auth })));
+export const LazyProjects = lazy(() => import('@/pages/Projects').then(module => ({ default: module.Projects })));
+export const LazyEvents = lazy(() => import('@/pages/Events').then(module => ({ default: module.Events })));
+export const LazyEventDetail = lazy(() => import('@/pages/EventDetail').then(module => ({ default: module.EventDetail })));
+export const LazyAdminDashboard = lazy(() => import('@/pages/AdminDashboard').then(module => ({ default: module.AdminDashboard })));
+export const LazyAIBuilder = lazy(() => import('@/pages/AIBuilder').then(module => ({ default: module.AIBuilder })));
+export const LazyLeaderboard = lazy(() => import('@/pages/Leaderboard').then(module => ({ default: module.Leaderboard })));
+export const LazyProfile = lazy(() => import('@/pages/Profile').then(module => ({ default: module.Profile })));
 
 // Performance monitoring utilities
 export const measurePerformance = (name: string, fn: () => void) => {
