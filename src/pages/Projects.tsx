@@ -22,6 +22,7 @@ import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
 import { PillChip } from '@/components/ui/PillChip';
 import { LikeButton } from '@/components/ui/LikeButton';
+import { ProjectSubmissionModal } from '@/components/ui/ProjectSubmissionModal';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
 import { toast } from 'react-hot-toast';
@@ -61,6 +62,7 @@ export function Projects() {
   const [projects, setProjects] = useState<Project[]>([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<string | null>(null);
+  const [showSubmissionModal, setShowSubmissionModal] = useState(false);
 
   // Fetch projects from Supabase
   useEffect(() => {
@@ -249,7 +251,12 @@ export function Projects() {
                 </div>
               )}
             </div>
-            <Button variant="primary" size="lg" glow>
+            <Button 
+              variant="primary" 
+              size="lg" 
+              glow
+              onClick={() => setShowSubmissionModal(true)}
+            >
               <Zap className="w-5 h-5 mr-2" />
               Submit Project
             </Button>
@@ -545,6 +552,14 @@ export function Projects() {
           </motion.div>
         )}
       </div>
+
+      {/* Project Submission Modal */}
+      <ProjectSubmissionModal
+        isOpen={showSubmissionModal}
+        onClose={() => setShowSubmissionModal(false)}
+        eventId={undefined}
+        eventTitle="General Project Submission"
+      />
     </div>
   );
 }

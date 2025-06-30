@@ -40,6 +40,7 @@ if (!validateEnvVars()) {
     },
   });
 } else {
+  console.log('Supabase configured with:', { url: supabaseUrl, key: supabaseAnonKey?.substring(0, 20) + '...' });
   supabase = createClient(supabaseUrl, supabaseAnonKey, {
     auth: {
       persistSession: true,
@@ -59,6 +60,23 @@ if (!validateEnvVars()) {
     },
   });
 }
+
+// Test Supabase connection
+export const testSupabaseConnection = async () => {
+  try {
+    console.log('Testing Supabase connection...');
+    const { error } = await supabase.from('profiles').select('count').limit(1);
+    if (error) {
+      console.error('Supabase connection test failed:', error);
+      return false;
+    }
+    console.log('Supabase connection successful');
+    return true;
+  } catch (err) {
+    console.error('Supabase connection test error:', err);
+    return false;
+  }
+};
 
 // Add error handling for network issues
 supabase.auth.onAuthStateChange((event) => {

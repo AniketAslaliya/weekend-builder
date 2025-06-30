@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { X, Upload } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
@@ -39,6 +39,26 @@ export function ProjectSubmissionModal({
   const [newTag, setNewTag] = useState('');
   const [newImage, setNewImage] = useState('');
   const [newTeamMember, setNewTeamMember] = useState({ name: '', role: '' });
+
+  // Handle keyboard events
+  useEffect(() => {
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape' && isOpen) {
+        handleClose();
+      }
+    };
+
+    if (isOpen) {
+      document.addEventListener('keydown', handleKeyDown);
+      // Prevent body scroll when modal is open
+      document.body.style.overflow = 'hidden';
+    }
+
+    return () => {
+      document.removeEventListener('keydown', handleKeyDown);
+      document.body.style.overflow = 'unset';
+    };
+  }, [isOpen]);
 
   const steps = [
     { id: 1, title: 'project details', icon: Upload },
@@ -194,7 +214,7 @@ export function ProjectSubmissionModal({
   };
 
   const nextStep = () => {
-    if (currentStep < steps.length) {
+    if (currentStep < steps.length && canProceed()) {
       setCurrentStep(currentStep + 1);
     }
   };
@@ -202,6 +222,12 @@ export function ProjectSubmissionModal({
   const prevStep = () => {
     if (currentStep > 1) {
       setCurrentStep(currentStep - 1);
+    }
+  };
+
+  const goToStep = (step: number) => {
+    if (step >= 1 && step <= steps.length) {
+      setCurrentStep(step);
     }
   };
 
@@ -220,6 +246,46 @@ export function ProjectSubmissionModal({
     }
   };
 
+  const getStepError = () => {
+    switch (currentStep) {
+      case 1:
+        if (!formData.title.trim()) return 'Project title is required';
+        if (!formData.description.trim()) return 'Project description is required';
+        return null;
+      case 3:
+        if (formData.tags.length === 0) return 'At least one tag is required';
+        return null;
+      default:
+        return null;
+    }
+  };
+
+  const canGoBack = () => {
+    return currentStep > 1;
+  };
+
+  const handleClose = () => {
+    // Reset form when closing
+    setFormData({
+      title: '',
+      description: '',
+      shortDescription: '',
+      demoUrl: '',
+      repoUrl: '',
+      videoUrl: '',
+      images: [],
+      tags: [],
+      teamMembers: [{ name: user?.user_metadata?.display_name || '', role: 'creator' }],
+      lookingForTeam: false,
+      teamNeeds: []
+    });
+    setCurrentStep(1);
+    setNewTag('');
+    setNewImage('');
+    setNewTeamMember({ name: '', role: '' });
+    onClose();
+  };
+
   if (!isOpen) return null;
 
   return (
@@ -229,12 +295,14 @@ export function ProjectSubmissionModal({
         animate={{ opacity: 1 }}
         exit={{ opacity: 0 }}
         className="fixed inset-0 bg-black/60 backdrop-blur-sm z-50 flex items-center justify-center p-4"
+        onClick={handleClose}
       >
         <motion.div
           initial={{ scale: 0.9, opacity: 0 }}
           animate={{ scale: 1, opacity: 1 }}
           exit={{ scale: 0.9, opacity: 0 }}
           className="bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 rounded-2xl max-w-4xl w-full relative shadow-2xl border border-accent-400/30 overflow-hidden max-h-[90vh] overflow-y-auto"
+          onClick={(e) => e.stopPropagation()}
         >
           {/* Background Pattern */}
           <div className="absolute inset-0 bg-gradient-to-br from-accent-500/5 to-transparent"></div>
@@ -244,7 +312,7 @@ export function ProjectSubmissionModal({
           {/* Close Button */}
           <button 
             className="absolute top-4 right-4 text-light-400 hover:text-accent-400 transition-colors z-10"
-            onClick={onClose}
+            onClick={handleClose}
           >
             <X className="w-6 h-6" />
           </button>
@@ -269,17 +337,22 @@ export function ProjectSubmissionModal({
                 const Icon = step.icon;
                 const isActive = currentStep === step.id;
                 const isCompleted = currentStep > step.id;
+                const canClick = isCompleted || isActive;
                 
                 return (
                   <div key={step.id} className="flex items-center">
-                    <div className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ${
-                      isActive ? 'bg-accent-600 text-white shadow-lg' : 
-                      isCompleted ? 'bg-success-600 text-white shadow-lg' : 
-                      'bg-white/10 text-light-400 border border-accent-400/20'
-                    }`}>
+                    <button
+                      onClick={() => canClick && goToStep(step.id)}
+                      disabled={!canClick}
+                      className={`flex items-center space-x-2 px-4 py-2 rounded-xl transition-all duration-300 ${
+                        isActive ? 'bg-accent-600 text-white shadow-lg' : 
+                        isCompleted ? 'bg-success-600 text-white shadow-lg hover:bg-success-500' : 
+                        'bg-white/10 text-light-400 border border-accent-400/20'
+                      } ${canClick ? 'cursor-pointer' : 'cursor-not-allowed'}`}
+                    >
                       <Icon className="w-4 h-4" />
                       <span className="text-sm font-medium">{step.title}</span>
-                    </div>
+                    </button>
                     {index < steps.length - 1 && (
                       <div className={`w-12 h-0.5 mx-3 rounded-full ${
                         isCompleted ? 'bg-success-600' : 'bg-accent-400/20'
@@ -293,6 +366,17 @@ export function ProjectSubmissionModal({
 
           {/* Form Content */}
           <div className="relative z-10 p-8">
+            {/* Error Message */}
+            {getStepError() && (
+              <motion.div
+                initial={{ opacity: 0, y: -10 }}
+                animate={{ opacity: 1, y: 0 }}
+                className="mb-6 p-4 bg-red-500/10 border border-red-500/30 rounded-lg"
+              >
+                <p className="text-red-400 text-sm font-medium">{getStepError()}</p>
+              </motion.div>
+            )}
+
             <AnimatePresence mode="wait">
               <motion.div
                 key={currentStep}
@@ -558,7 +642,7 @@ export function ProjectSubmissionModal({
           {/* Action Buttons */}
           <div className="relative z-10 p-8 border-t border-accent-400/20">
             <div className="flex gap-4">
-              {currentStep > 1 && (
+              {canGoBack() && (
                 <Button 
                   variant="outline" 
                   onClick={prevStep}
@@ -576,7 +660,17 @@ export function ProjectSubmissionModal({
                   className="flex-1"
                   glow
                 >
-                  Next
+                  {getStepError() ? (
+                    <>
+                      <X className="w-4 h-4 mr-2" />
+                      {getStepError()}
+                    </>
+                  ) : (
+                    <>
+                      Next
+                      <span className="ml-2 text-sm opacity-75">Step {currentStep + 1}</span>
+                    </>
+                  )}
                 </Button>
               ) : (
                 <Button 

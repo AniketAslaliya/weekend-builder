@@ -152,6 +152,25 @@ export function Footer() {
               <Code2 className="w-4 h-4 mr-1 text-accent-400" />
               Empowering creators worldwide
             </span>
+            <a
+              href="https://bolt.new"
+              target="_blank"
+              rel="noopener noreferrer"
+              className="inline-flex items-center gap-2 text-accent-400 font-bold hover:text-accent-300 transition-colors"
+            >
+              <img 
+                src="https://bolt.new/badge.svg" 
+                alt="Built with Bolt.new" 
+                className="h-5 w-auto"
+                onError={(e) => {
+                  // Fallback if image fails to load
+                  e.currentTarget.style.display = 'none';
+                  e.currentTarget.nextElementSibling?.classList.remove('hidden');
+                }}
+              />
+              <span className="hidden">🚀</span>
+              Built with Bolt.new
+            </a>
           </div>
         </motion.div>
 
