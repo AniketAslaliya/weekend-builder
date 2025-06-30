@@ -6,7 +6,11 @@ global.IntersectionObserver = class IntersectionObserver {
   disconnect() {}
   observe() {}
   unobserve() {}
-};
+  takeRecords() { return []; }
+  root: Element | null = null;
+  rootMargin: string = '';
+  thresholds: ReadonlyArray<number> = [];
+} as any;
 
 // Mock ResizeObserver
 global.ResizeObserver = class ResizeObserver {
@@ -19,17 +23,17 @@ global.ResizeObserver = class ResizeObserver {
 // Mock matchMedia
 Object.defineProperty(window, 'matchMedia', {
   writable: true,
-  value: jest.fn().mockImplementation(query => ({
+  value: (global as any).jest.fn().mockImplementation((query: string) => ({
     matches: false,
     media: query,
     onchange: null,
-    addListener: jest.fn(),
-    removeListener: jest.fn(),
-    addEventListener: jest.fn(),
-    removeEventListener: jest.fn(),
-    dispatchEvent: jest.fn(),
+    addListener: (global as any).jest.fn(),
+    removeListener: (global as any).jest.fn(),
+    addEventListener: (global as any).jest.fn(),
+    removeEventListener: (global as any).jest.fn(),
+    dispatchEvent: (global as any).jest.fn(),
   })),
 });
 
 // Mock scrollTo
-window.scrollTo = jest.fn();
+window.scrollTo = (global as any).jest.fn();

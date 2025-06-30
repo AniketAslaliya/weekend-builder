@@ -1,29 +1,24 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
-  Zap, 
-  Code2, 
   Sparkles, 
-  Wand2,
-  Rocket,
-  Brain,
-  Settings,
+  Code2, 
+  Zap, 
+  Star, 
+  Share2, 
+  Filter, 
+  ArrowRight,
+  Check,
+  Copy,
+  Upload,
   Play,
   Download,
-  Share2,
-  Copy,
-  Check,
-  Plus,
-  Save,
-  Upload,
   X
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
-import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
 import { ProjectSubmissionModal } from '@/components/ui/ProjectSubmissionModal';
 
@@ -76,7 +71,7 @@ export function AIBuilder() {
       id: 'ai-tool',
       title: 'ai-powered tool',
       description: 'ai application with machine learning capabilities',
-      icon: Brain,
+      icon: Star,
       color: 'from-green-500 to-emerald-500',
       features: ['ai/ml integration', 'data processing', 'model training', 'api endpoints']
     },
@@ -84,7 +79,7 @@ export function AIBuilder() {
       id: 'chrome-extension',
       title: 'browser extension',
       description: 'chrome extension with modern web technologies',
-      icon: Wand2,
+      icon: Code2,
       color: 'from-orange-500 to-red-500',
       features: ['manifest v3', 'content scripts', 'background service', 'popup interface']
     }
@@ -99,12 +94,12 @@ export function AIBuilder() {
     {
       title: 'intelligent architecture',
       description: 'ai suggests optimal project architecture and best practices',
-      icon: Settings
+      icon: Filter
     },
     {
       title: 'instant deployment',
       description: 'deploy your generated projects instantly to the cloud',
-      icon: Rocket
+      icon: ArrowRight
     },
     {
       title: 'real-time collaboration',
@@ -231,7 +226,7 @@ export default App;`;
         >
           <div className="text-center">
             <Badge variant="primary" size="lg" className="mb-4" glow>
-              <Brain className="w-4 h-4 mr-2" />
+              <Star className="w-4 h-4 mr-2" />
               ai builder
             </Badge>
             <h1 className="text-5xl font-bold text-white mb-4">
@@ -278,7 +273,7 @@ export default App;`;
             <GlassyCard className="p-8">
               <div>
                 <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
-                  <Wand2 className="w-6 h-6 mr-2 text-accent-400" />
+                  <Code2 className="w-6 h-6 mr-2 text-accent-400" />
                   choose template
                 </h2>
               </div>
@@ -334,7 +329,7 @@ export default App;`;
               >
                 {isGenerating ? (
                   <>
-                    <Brain className="w-6 h-6 mr-2 animate-pulse" />
+                    <Star className="w-6 h-6 mr-2 animate-pulse" />
                     ai is building your project...
                   </>
                 ) : (
@@ -350,7 +345,7 @@ export default App;`;
                   variant="outline"
                   size="xl"
                   onClick={handleSaveProject}
-                  icon={<Save className="w-5 h-5" />}
+                  icon={<Star className="w-5 h-5" />}
                 >
                   save project
                 </Button>
@@ -424,7 +419,7 @@ export default App;`;
             <GlassyCard className="p-6">
               <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center">
-                  <Save className="w-5 h-5 mr-2 text-accent-400" />
+                  <Star className="w-5 h-5 mr-2 text-accent-400" />
                   saved projects ({savedProjects.length})
                 </h2>
               </div>
@@ -462,7 +457,7 @@ export default App;`;
             <GlassyCard className="p-6">
               <div>
                 <h2 className="text-xl font-bold text-white mb-4 flex items-center">
-                  <Brain className="w-5 h-5 mr-2 text-accent-400" />
+                  <Star className="w-5 h-5 mr-2 text-accent-400" />
                   ai features
                 </h2>
               </div>
@@ -504,7 +499,7 @@ export default App;`;
           className="text-center mt-16"
         >
           <GlassyCard className="max-w-2xl mx-auto p-12">
-            <Rocket className="w-16 h-16 text-accent-400 mx-auto mb-6" />
+            <ArrowRight className="w-16 h-16 text-accent-400 mx-auto mb-6" />
             <h3 className="text-3xl font-bold text-white mb-4">
               ready to build the future?
             </h3>

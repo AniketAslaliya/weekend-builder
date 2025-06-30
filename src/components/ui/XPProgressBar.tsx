@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { Star, Zap } from 'lucide-react';
 import { useXPSystem } from '@/hooks/useXPSystem';

@@ -1,30 +1,16 @@
-import React, { useState, useEffect, useRef } from 'react';
+import { useState, useEffect, useRef } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   User, 
   Settings, 
-  Trophy, 
   Star, 
   Code2, 
   Heart,
   Calendar,
-  MapPin,
-  Link as LinkIcon,
-  Github,
-  Twitter,
   Edit3,
   Award,
   Zap,
-  TrendingUp,
-  Save,
-  Plus,
   X,
-  Instagram,
-  Linkedin,
-  Globe,
-  Briefcase,
-  GraduationCap,
-  Target,
   Loader2,
   BadgeCheck,
   UserCircle,
@@ -32,7 +18,7 @@ import {
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
 import { StatCard } from '@/components/ui/StatCard';
@@ -42,7 +28,6 @@ import toast from 'react-hot-toast';
 
 export function Profile() {
   const { user, updateProfile, getProfile } = useAuth();
-  const [isEditing, setIsEditing] = useState(false);
   const [activeTab, setActiveTab] = useState('overview');
   const [loading, setLoading] = useState(true);
   const [saving, setSaving] = useState(false);
@@ -75,8 +60,8 @@ export function Profile() {
     created_at: '',
     updated_at: ''
   });
-  const [avatarPreview, setAvatarPreview] = useState(user?.avatar_url || '');
-  const fileInputRef = useRef(null);
+  const [avatarPreview, setAvatarPreview] = useState(user?.user_metadata?.avatar_url || '');
+  const fileInputRef = useRef<HTMLInputElement>(null);
 
   // Load profile data
   useEffect(() => {
@@ -87,7 +72,7 @@ export function Profile() {
         const { data, error } = await getProfile();
         if (error) {
           // If profile is missing, create it and reload
-          if (error.message?.includes('No user logged in') || error.message?.includes('not found')) {
+          if ((error as any).message?.includes('No user logged in') || (error as any).message?.includes('not found')) {
             await updateProfile({
               display_name: user.user_metadata?.display_name || user.email?.split('@')[0] || 'builder',
               bio: 'passionate builder creating amazing projects',
@@ -138,13 +123,6 @@ export function Profile() {
     { id: 'settings', label: 'settings', icon: Settings }
   ];
 
-  const mockBadges = [
-    { id: '1', name: 'first project', icon: '🌟', rarity: 'common', description: 'completed first project submission' },
-    { id: '2', name: 'team player', icon: '🤝', rarity: 'common', description: 'collaborated on 5+ team projects' },
-    { id: '3', name: 'weekend warrior', icon: '🔥', rarity: 'rare', description: 'participated in 10+ weekend events' },
-    { id: '4', name: 'ai specialist', icon: '🤖', rarity: 'epic', description: 'built 5+ ai-powered projects' }
-  ];
-
   const mockProjects = [
     {
       id: '1',
@@ -163,23 +141,6 @@ export function Profile() {
       description: 'smart task management with ai prioritization'
     }
   ];
-
-  const getBadgeColor = (rarity: string) => {
-    switch (rarity) {
-      case 'legendary': return 'warning';
-      case 'epic': return 'primary';
-      case 'rare': return 'success';
-      default: return 'gray';
-    }
-  };
-
-  const getProjectStatusColor = (status: string) => {
-    switch (status) {
-      case 'featured': return 'warning';
-      case 'trending': return 'success';
-      default: return 'gray';
-    }
-  };
 
   const handleSaveProfile = async () => {
     setSaving(true);
@@ -211,7 +172,7 @@ export function Profile() {
         console.error('Error updating profile:', error);
       } else {
         toast.success('profile updated successfully!');
-        setIsEditing(false);
+        setEditOpen(false);
       }
     } catch (error) {
       toast.error('failed to update profile');
@@ -263,11 +224,15 @@ export function Profile() {
   };
 
   // Handle avatar upload
-  const handleAvatarChange = (e) => {
-    const file = e.target.files[0];
+  const handleAvatarChange = (e: React.ChangeEvent<HTMLInputElement>) => {
+    const file = e.target.files?.[0];
     if (file) {
       const reader = new FileReader();
-      reader.onload = (ev) => setAvatarPreview(ev.target.result);
+      reader.onload = (ev) => {
+        if (ev.target?.result) {
+          setAvatarPreview(ev.target.result as string);
+        }
+      };
       reader.readAsDataURL(file);
     }
   };

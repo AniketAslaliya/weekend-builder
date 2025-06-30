@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 import { Loader2 } from 'lucide-react';
@@ -56,7 +55,7 @@ export function Button({
       whileTap={{ scale: disabled || loading ? 1 : 0.98 }}
       className={clsx(baseClasses, className)}
       disabled={disabled || loading}
-      {...props}
+      {...(props as any)}
     >
       {loading ? (
         <Loader2 className="w-4 h-4 mr-2 animate-spin" />

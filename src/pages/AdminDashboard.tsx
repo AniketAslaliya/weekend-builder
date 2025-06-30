@@ -1,27 +1,21 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
-  Plus,
-  Edit3,
-  Trash2,
-  Users,
-  Trophy,
-  Calendar,
-  Settings,
+  Users, 
+  Calendar, 
+  Star, 
+  TrendingUp, 
+  Award, 
+  Settings, 
+  Plus, 
+  Edit3, 
+  Trash2, 
+  Crown, 
+  Medal, 
+  Trophy, 
   BarChart3,
-  Crown,
-  Medal,
-  Award,
-  Star,
-  Eye,
-  EyeOff,
   Save,
-  X,
-  Upload,
-  Flag,
-  Zap,
-  Target,
-  Gift
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -35,7 +29,6 @@ export function AdminDashboard() {
   const [activeTab, setActiveTab] = useState('overview');
   const [showCreateEvent, setShowCreateEvent] = useState(false);
   const [showWinnerModal, setShowWinnerModal] = useState(false);
-  const [selectedEvent, setSelectedEvent] = useState<string | null>(null);
 
   // Check if user is admin (in real app, this would be from database)
   const isAdmin = user?.email === 'admin@weekendbuilder.com';
@@ -45,7 +38,7 @@ export function AdminDashboard() {
       <div className="min-h-screen bg-dark-950 flex items-center justify-center">
         <Card variant="default" className="p-12 text-center max-w-md">
           <div className="w-16 h-16 bg-error-600 rounded-full flex items-center justify-center mx-auto mb-6">
-            <EyeOff className="w-8 h-8 text-white" />
+            <Settings className="w-8 h-8 text-white" />
           </div>
           <h2 className="text-2xl font-bold text-white mb-4">Access Denied</h2>
           <p className="text-light-400 mb-6">
@@ -108,11 +101,11 @@ export function AdminDashboard() {
     { label: 'Total Events', value: '42', icon: Calendar, color: 'text-accent-400' },
     { label: 'Active Participants', value: '2,847', icon: Users, color: 'text-success-400' },
     { label: 'Projects Submitted', value: '1,293', icon: Trophy, color: 'text-warning-400' },
-    { label: 'Total Prize Money', value: '$125K', icon: Gift, color: 'text-error-400' }
+    { label: 'Total Prize Money', value: '$125K', icon: Award, color: 'text-error-400' }
   ];
 
   const tabs = [
-    { id: 'overview', label: 'Overview', icon: BarChart3 },
+    { id: 'overview', label: 'Overview', icon: TrendingUp },
     { id: 'events', label: 'Events', icon: Calendar },
     { id: 'winners', label: 'Winners', icon: Crown },
     { id: 'settings', label: 'Settings', icon: Settings }
@@ -122,12 +115,11 @@ export function AdminDashboard() {
     setShowCreateEvent(true);
   };
 
-  const handleAnnounceWinners = (eventId: string) => {
-    setSelectedEvent(eventId);
+  const handleAnnounceWinners = () => {
     setShowWinnerModal(true);
   };
 
-  const handleDeleteEvent = (eventId: string) => {
+  const handleDeleteEvent = () => {
     if (confirm('Are you sure you want to delete this event?')) {
       toast.success('Event deleted successfully');
     }
@@ -175,7 +167,7 @@ export function AdminDashboard() {
           transition={{ duration: 0.8, delay: 0.1 }}
           className="grid grid-cols-2 md:grid-cols-4 gap-6 mb-12"
         >
-          {stats.map((stat, index) => {
+          {stats.map((stat) => {
             const Icon = stat.icon;
             return (
               <Card key={stat.label} className="p-6 text-center">
@@ -280,7 +272,7 @@ export function AdminDashboard() {
                         variant="outline"
                         size="lg"
                         className="w-full justify-start"
-                        onClick={() => handleAnnounceWinners('1')}
+                        onClick={() => handleAnnounceWinners()}
                         icon={<Crown className="w-5 h-5" />}
                       >
                         Announce Winners
@@ -345,7 +337,7 @@ export function AdminDashboard() {
                           <Button
                             variant="primary"
                             size="md"
-                            onClick={() => handleAnnounceWinners(event.id)}
+                            onClick={() => handleAnnounceWinners()}
                             icon={<Crown className="w-4 h-4" />}
                           >
                             Announce Winners
@@ -367,7 +359,7 @@ export function AdminDashboard() {
                         <Button
                           variant="danger"
                           size="md"
-                          onClick={() => handleDeleteEvent(event.id)}
+                          onClick={() => handleDeleteEvent()}
                           icon={<Trash2 className="w-4 h-4" />}
                         >
                           Delete

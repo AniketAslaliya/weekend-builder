@@ -1,9 +1,8 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
   Filter, 
-  Heart, 
   MessageCircle, 
   ExternalLink, 
   Github,
@@ -15,15 +14,12 @@ import {
   Eye,
   Zap,
   Award,
-  Code2,
   Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
-import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
 import { LikeButton } from '@/components/ui/LikeButton';
 import { supabase } from '@/lib/supabase';
@@ -379,7 +375,7 @@ export function Projects() {
                   {/* Project Image */}
                   <div className="aspect-video relative overflow-hidden rounded-xl mb-6">
                     <img
-                      src={project.image}
+                      src={project.image || undefined}
                       alt={project.title}
                       className="w-full h-full object-cover group-hover:scale-110 transition-transform duration-500"
                     />
@@ -443,7 +439,7 @@ export function Projects() {
                     {/* Creator */}
                     <div className="flex items-center space-x-3">
                       <img
-                        src={project.creator.avatar_url}
+                        src={project.creator.avatar_url || undefined}
                         alt={project.creator.display_name}
                         className="w-10 h-10 rounded-full object-cover border-2 border-accent-600"
                       />

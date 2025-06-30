@@ -1,20 +1,10 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
-import { 
-  X, 
-  Send, 
-  Link as LinkIcon, 
-  FileText,
-  Users,
-  Tag,
-  Loader2
-} from 'lucide-react';
-import { Button } from './Button';
-import { Input } from './Input';
-import { Card } from './Card';
-import { Badge } from './Badge';
-import { useAuth } from '../../hooks/useAuth';
-import { supabase } from '../../lib/supabase';
+import { X, Upload } from 'lucide-react';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/useAuth';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 import toast from 'react-hot-toast';
 
 interface ProjectSubmissionModalProps {
@@ -51,10 +41,10 @@ export function ProjectSubmissionModal({
   const [newTeamMember, setNewTeamMember] = useState({ name: '', role: '' });
 
   const steps = [
-    { id: 1, title: 'project details', icon: FileText },
-    { id: 2, title: 'media & links', icon: LinkIcon },
-    { id: 3, title: 'team & tags', icon: Users },
-    { id: 4, title: 'review & submit', icon: Send }
+    { id: 1, title: 'project details', icon: Upload },
+    { id: 2, title: 'media & links', icon: Upload },
+    { id: 3, title: 'team & tags', icon: Upload },
+    { id: 4, title: 'review & submit', icon: Upload }
   ];
 
   const handleSubmit = async () => {
@@ -263,7 +253,7 @@ export function ProjectSubmissionModal({
           <div className="relative z-10 p-8 border-b border-accent-400/20">
             <div className="flex items-center space-x-3 mb-4">
               <div className="w-12 h-12 bg-gradient-to-r from-accent-500 to-purple-500 rounded-xl flex items-center justify-center">
-                <Send className="w-6 h-6 text-white" />
+                <Upload className="w-6 h-6 text-white" />
               </div>
               <div>
                 <h2 className="text-3xl font-bold text-white">Submit Project</h2>
@@ -598,12 +588,12 @@ export function ProjectSubmissionModal({
                 >
                   {loading ? (
                     <>
-                      <Loader2 className="w-5 h-5 mr-2 animate-spin" />
+                      <Upload className="w-5 h-5 mr-2 animate-spin" />
                       Submitting...
                     </>
                   ) : (
                     <>
-                      <Send className="w-5 h-5 mr-2" />
+                      <Upload className="w-5 h-5 mr-2" />
                       Submit Project
                     </>
                   )}

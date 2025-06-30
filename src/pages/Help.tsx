@@ -1,22 +1,15 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   HelpCircle, 
-  Search, 
-  MessageCircle, 
-  Mail, 
-  BookOpen, 
-  Video, 
-  FileText,
+  Search,
+  BookOpen,
   Zap,
-  Star,
-  Users,
-  Globe
+  FileText,
+  Users
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
+import { Input } from '@/components/ui/Input';
 
 export function Help() {
   return (

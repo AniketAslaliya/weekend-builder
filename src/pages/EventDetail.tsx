@@ -1,5 +1,5 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
+import { useState, useEffect } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
@@ -25,7 +25,6 @@ import {
   Eye,
   Code2,
   Upload,
-  Send,
   ChevronDown,
   ChevronUp
 } from 'lucide-react';
@@ -38,7 +37,6 @@ import { useAuth } from '@/hooks/useAuth';
 import toast from 'react-hot-toast';
 
 export function EventDetail() {
-  const { id } = useParams();
   const navigate = useNavigate();
   const { user } = useAuth();
   const [activeTab, setActiveTab] = useState('overview');
@@ -273,15 +271,6 @@ build innovative ai-powered solutions that solve real-world problems and demonst
       return;
     }
     setShowSubmissionModal(true);
-  };
-
-  const handleVote = (projectId: string) => {
-    if (!user) {
-      toast.error('please sign in to vote');
-      navigate('/auth');
-      return;
-    }
-    toast.success('vote submitted!');
   };
 
   return (
@@ -680,7 +669,6 @@ build innovative ai-powered solutions that solve real-world problems and demonst
                           <div className="flex items-center justify-between pt-4 border-t border-dark-700">
                             <div className="flex items-center space-x-4 text-light-400">
                               <button
-                                onClick={() => handleVote(project.id)}
                                 className="flex items-center space-x-1 hover:text-error-400 transition-colors"
                               >
                                 <Heart className="w-4 h-4" />
@@ -715,7 +703,7 @@ build innovative ai-powered solutions that solve real-world problems and demonst
                   </CardHeader>
                   <CardContent>
                     <div className="space-y-4">
-                      {leaderboard.map((entry, index) => (
+                      {leaderboard.map((entry) => (
                         <div key={entry.project.id} className="flex items-center justify-between p-6 bg-dark-700 rounded-lg">
                           <div className="flex items-center space-x-6">
                             <div className="flex items-center justify-center w-12 h-12">

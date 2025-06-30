@@ -1,10 +1,9 @@
-import React from 'react';
+import { useState } from 'react';
 import { motion } from 'framer-motion';
 import { AlertTriangle, ExternalLink, Copy, Check } from 'lucide-react';
-import { Card, CardContent } from '@/components/ui/Card';
+import { Card } from '@/components/ui/Card';
 import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
-import { useState } from 'react';
 
 export function SupabaseSetup() {
   const [copiedStep, setCopiedStep] = useState<number | null>(null);

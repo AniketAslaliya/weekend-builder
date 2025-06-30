@@ -115,7 +115,7 @@ export function useAuth() {
         }
 
         // Show appropriate messages
-        if (event === 'SIGNED_IN' && session?.user && event !== 'INITIAL_SESSION') {
+        if (event === 'SIGNED_IN' && session?.user) {
           // Only show welcome toast on actual sign-in, not on page refresh
           const hasShownWelcome = sessionStorage.getItem('welcomeShown');
           if (!hasShownWelcome) {
@@ -127,8 +127,7 @@ export function useAuth() {
           // Clear the welcome flag when signing out
           sessionStorage.removeItem('welcomeShown');
         }
-      },
-      [createUserProfile]
+      }
     );
 
     return () => {

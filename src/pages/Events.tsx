@@ -1,31 +1,27 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Calendar, 
-  Clock, 
+  MapPin, 
   Users, 
-  Trophy, 
-  ArrowRight,
-  Filter,
   Search,
-  MapPin,
+  Filter,
   Star,
-  Zap,
   Award,
+  Zap,
   Code2,
+  Plus,
+  Trophy,
+  Gift,
   Crown,
   Medal,
-  Gift,
-  TrendingUp,
-  Eye,
-  Plus
+  ArrowRight,
+  Eye
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
-import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
-import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
 import { useNavigate } from 'react-router-dom';
 import { useAuth } from '@/hooks/useAuth';

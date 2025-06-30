@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from 'react';
+import { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -10,16 +10,12 @@ import {
   Code2,
   Heart,
   Calendar,
-  Filter,
   Crown,
-  Target,
-  Zap
+  Target
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
-import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
 
 // AnimatedCounter component
@@ -41,6 +37,49 @@ const AnimatedCounter = ({ value }: { value: number }) => {
   }, [value]);
   return <span>{display}</span>;
 };
+
+// Type definitions for leaderboard entries
+type OverallEntry = {
+  rank: number;
+  user: {
+    id: string;
+    name: string;
+    avatar: string;
+    location: string;
+  };
+  points: number;
+  projects: number;
+  votes: number;
+  badges: number;
+  streak: number;
+  specialBadges: string[];
+};
+
+type ProjectEntry = {
+  rank: number;
+  project: {
+    title: string;
+    creator: string;
+    image: string;
+  };
+  votes: number;
+  views: number;
+  comments: number;
+};
+
+type EventEntry = {
+  rank: number;
+  event: string;
+  winner: {
+    name: string;
+    project: string;
+    prize: string;
+  };
+  participants: number;
+  projects: number;
+};
+
+type LeaderboardEntry = OverallEntry | ProjectEntry | EventEntry;
 
 export function Leaderboard() {
   const [selectedPeriod, setSelectedPeriod] = useState('all-time');
@@ -242,15 +281,15 @@ export function Leaderboard() {
     }
   };
 
-  const getRankHighlight = (rank) => {
+  const getRankHighlight = (rank: number) => {
     if (rank === 1) return 'border-4 border-yellow-400 shadow-xl';
     if (rank === 2) return 'border-4 border-gray-300 shadow-lg';
     if (rank === 3) return 'border-4 border-amber-700 shadow-md';
     return '';
   };
 
-  const renderLeaderboardItem = (entry: any, index: number) => {
-    if (selectedCategory === 'projects') {
+  const renderLeaderboardItem = (entry: LeaderboardEntry) => {
+    if (selectedCategory === 'projects' && 'project' in entry) {
       return (
         <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)}`}>
           <div className="flex items-center justify-between p-6">
@@ -289,7 +328,7 @@ export function Leaderboard() {
       );
     }
 
-    if (selectedCategory === 'events') {
+    if (selectedCategory === 'events' && 'event' in entry) {
       return (
         <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)}`}>
           <div className="flex items-center justify-between p-6">
@@ -327,64 +366,68 @@ export function Leaderboard() {
     }
 
     // Default: Overall/Streak leaderboard
-    return (
-      <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)} ${getRankHighlight(entry.rank)}`}>
-        <div className="flex items-center justify-between p-6">
-          <div className="flex items-center space-x-6">
-            <div className="flex items-center justify-center w-16 h-16">
-              {getRankIcon(entry.rank)}
+    if ('user' in entry) {
+      return (
+        <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)} ${getRankHighlight(entry.rank)}`}>
+          <div className="flex items-center justify-between p-6">
+            <div className="flex items-center space-x-6">
+              <div className="flex items-center justify-center w-16 h-16">
+                {getRankIcon(entry.rank)}
+              </div>
+              
+              <img
+                src={entry.user.avatar}
+                alt={entry.user.name}
+                className="w-16 h-16 rounded-full border-2 border-accent-600"
+              />
+              
+              <div>
+                <h3 className="text-xl font-bold text-white mb-1">
+                  {entry.user.name}
+                </h3>
+                <p className="text-light-400 text-sm mb-2">
+                  {entry.user.location}
+                </p>
+                <div className="flex flex-wrap gap-1">
+                  {entry.specialBadges.slice(0, 2).map((badge: string, badgeIndex: number) => (
+                    <PillChip key={badgeIndex}>{badge}</PillChip>
+                  ))}
+                </div>
+              </div>
             </div>
             
-            <img
-              src={entry.user.avatar}
-              alt={entry.user.name}
-              className="w-16 h-16 rounded-full border-2 border-accent-600"
-            />
-            
-            <div>
-              <h3 className="text-xl font-bold text-white mb-1">
-                {entry.user.name}
-              </h3>
-              <p className="text-light-400 text-sm mb-2">
-                {entry.user.location}
-              </p>
-              <div className="flex flex-wrap gap-1">
-                {entry.specialBadges.slice(0, 2).map((badge: string, badgeIndex: number) => (
-                  <PillChip key={badgeIndex}>{badge}</PillChip>
-                ))}
+            <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
+              <div>
+                <div className="text-2xl font-bold text-white">
+                  <AnimatedCounter value={entry.points} />
+                </div>
+                <div className="text-sm text-light-400">points</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">
+                  <AnimatedCounter value={entry.projects} />
+                </div>
+                <div className="text-sm text-light-400">projects</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">
+                  <AnimatedCounter value={entry.votes} />
+                </div>
+                <div className="text-sm text-light-400">votes</div>
+              </div>
+              <div>
+                <div className="text-2xl font-bold text-white">
+                  <AnimatedCounter value={entry.badges} />
+                </div>
+                <div className="text-sm text-light-400">badges</div>
               </div>
             </div>
           </div>
-          
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
-            <div>
-              <div className="text-2xl font-bold text-white">
-                <AnimatedCounter value={entry.points} />
-              </div>
-              <div className="text-sm text-light-400">points</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">
-                <AnimatedCounter value={entry.projects} />
-              </div>
-              <div className="text-sm text-light-400">projects</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">
-                <AnimatedCounter value={entry.votes} />
-              </div>
-              <div className="text-sm text-light-400">votes</div>
-            </div>
-            <div>
-              <div className="text-2xl font-bold text-white">
-                <AnimatedCounter value={entry.badges} />
-              </div>
-              <div className="text-sm text-light-400">badges</div>
-            </div>
-          </div>
-        </div>
-      </GlassyCard>
-    );
+        </GlassyCard>
+      );
+    }
+
+    return null;
   };
 
   return (
@@ -490,7 +533,7 @@ export function Leaderboard() {
           className="mb-12"
         >
           <div className="grid md:grid-cols-3 gap-8 max-w-4xl mx-auto">
-            {getCurrentData().slice(0, 3).map((entry, index) => {
+            {getCurrentData().slice(0, 3).map((_, index) => {
               const positions = [1, 0, 2]; // 2nd, 1st, 3rd for visual arrangement
               const actualIndex = positions[index];
               const actualEntry = getCurrentData()[actualIndex];
@@ -508,24 +551,24 @@ export function Leaderboard() {
                       {getRankIcon(actualEntry.rank || actualIndex + 1)}
                     </div>
                     
-                    {selectedCategory === 'projects' ? (
+                    {selectedCategory === 'projects' && 'project' in actualEntry ? (
                       <>
                         <img
-                          src={actualEntry.project?.image}
-                          alt={actualEntry.project?.title}
+                          src={actualEntry.project.image}
+                          alt={actualEntry.project.title}
                           className={`${actualIndex === 0 ? 'w-24 h-24' : 'w-20 h-20'} rounded-lg mx-auto mb-4 border-4 ${
                             actualIndex === 0 ? 'border-yellow-500' : 
                             actualIndex === 1 ? 'border-gray-400' : 'border-amber-600'
                           }`}
                         />
                         <h3 className={`${actualIndex === 0 ? 'text-2xl' : 'text-xl'} font-bold text-white mb-2`}>
-                          {actualEntry.project?.title}
+                          {actualEntry.project.title}
                         </h3>
                         <p className="text-light-400 text-sm mb-4">
-                          by {actualEntry.project?.creator}
+                          by {actualEntry.project.creator}
                         </p>
                       </>
-                    ) : selectedCategory === 'events' ? (
+                    ) : selectedCategory === 'events' && 'event' in actualEntry ? (
                       <>
                         <div className={`${actualIndex === 0 ? 'w-24 h-24' : 'w-20 h-20'} bg-gradient-to-br from-accent-500 to-accent-700 rounded-lg mx-auto mb-4 flex items-center justify-center`}>
                           <Crown className={`${actualIndex === 0 ? 'w-12 h-12' : 'w-10 h-10'} text-white`} />
@@ -534,33 +577,33 @@ export function Leaderboard() {
                           {actualEntry.event}
                         </h3>
                         <p className="text-light-400 text-sm mb-4">
-                          {actualEntry.winner?.name}
+                          {actualEntry.winner.name}
                         </p>
                       </>
-                    ) : (
+                    ) : 'user' in actualEntry ? (
                       <>
                         <img
-                          src={actualEntry.user?.avatar}
-                          alt={actualEntry.user?.name}
+                          src={actualEntry.user.avatar}
+                          alt={actualEntry.user.name}
                           className={`${actualIndex === 0 ? 'w-24 h-24' : 'w-20 h-20'} rounded-full mx-auto mb-4 border-4 ${
                             actualIndex === 0 ? 'border-yellow-500' : 
                             actualIndex === 1 ? 'border-gray-400' : 'border-amber-600'
                           }`}
                         />
                         <h3 className={`${actualIndex === 0 ? 'text-2xl' : 'text-xl'} font-bold text-white mb-2`}>
-                          {actualEntry.user?.name}
+                          {actualEntry.user.name}
                         </h3>
                         <p className="text-light-400 text-sm mb-4">
-                          {actualEntry.user?.location}
+                          {actualEntry.user.location}
                         </p>
                       </>
-                    )}
+                    ) : null}
                     
                     <div className={`${actualIndex === 0 ? 'text-4xl' : 'text-3xl'} font-bold text-white mb-2`}>
-                      {selectedCategory === 'streak' ? <AnimatedCounter value={actualEntry.streak} /> : 
-                       selectedCategory === 'projects' ? <AnimatedCounter value={actualEntry.votes} /> :
-                       selectedCategory === 'events' ? <AnimatedCounter value={actualEntry.participants} /> :
-                       <AnimatedCounter value={actualEntry.points} />}
+                      {selectedCategory === 'streak' && 'streak' in actualEntry ? <AnimatedCounter value={actualEntry.streak} /> : 
+                       selectedCategory === 'projects' && 'votes' in actualEntry ? <AnimatedCounter value={actualEntry.votes} /> :
+                       selectedCategory === 'events' && 'participants' in actualEntry ? <AnimatedCounter value={actualEntry.participants} /> :
+                       'points' in actualEntry ? <AnimatedCounter value={actualEntry.points} /> : 0}
                     </div>
                     <p className="text-light-400 text-sm mb-4">
                       {selectedCategory === 'streak' ? 'weeks' : 
@@ -596,12 +639,12 @@ export function Leaderboard() {
           
           {getCurrentData().map((entry, index) => (
             <motion.div
-              key={entry.rank || entry.id || index}
+              key={entry.rank || index}
               initial={{ opacity: 0, x: -20 }}
               animate={{ opacity: 1, x: 0 }}
               transition={{ duration: 0.6, delay: index * 0.1 }}
             >
-              {renderLeaderboardItem(entry, index)}
+              {renderLeaderboardItem(entry)}
             </motion.div>
           ))}
         </motion.div>

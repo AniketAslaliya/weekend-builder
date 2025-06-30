@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { Link, useNavigate } from 'react-router-dom';
+import { useState } from 'react';
+import { useNavigate } from 'react-router-dom';
 import { motion } from 'framer-motion';
 import { 
-  Calendar, 
+  ArrowRight, 
+  Star, 
   Users, 
   Trophy, 
   Zap, 
-  ArrowRight,
+  Code2, 
+  Heart, 
+  TrendingUp, 
+  Award, 
+  Calendar,
   Clock,
-  Star,
   Rocket,
-  Heart,
-  Code2,
-  TrendingUp,
-  Award,
   Target
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
-import { Card, CardContent, CardHeader } from '@/components/ui/Card';
+import { Card, CardContent } from '@/components/ui/Card';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
 import { StatCard } from '@/components/ui/StatCard';
@@ -104,7 +104,7 @@ export function Home() {
 
   const stats = [
     { label: 'active builders', value: '2,847', icon: Users },
-    { label: 'projects built', value: '1,293', icon: Rocket },
+    { label: 'projects built', value: '1,293', icon: Zap },
     { label: 'weekend events', value: '42', icon: Calendar },
     { label: 'community votes', value: '15,672', icon: Star }
   ];

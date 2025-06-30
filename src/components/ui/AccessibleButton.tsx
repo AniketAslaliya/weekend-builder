@@ -1,4 +1,3 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { clsx } from 'clsx';
 import { Loader2 } from 'lucide-react';
@@ -70,7 +69,7 @@ export function AccessibleButton({
       aria-label={ariaLabel}
       aria-describedby={ariaDescribedBy}
       aria-busy={loading}
-      {...props}
+      {...(props as any)}
     >
       {loading ? (
         <>

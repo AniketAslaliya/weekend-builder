@@ -1,117 +1,110 @@
-import React, { useEffect, useState } from 'react';
-import { Heart, Loader2 } from 'lucide-react';
+import { useEffect, useState } from 'react';
+import { Heart } from 'lucide-react';
 import { supabase } from '@/lib/supabase';
 import { useAuth } from '@/hooks/useAuth';
-import toast from 'react-hot-toast';
-import { Button } from '@/components/ui/Button';
+import { motion } from 'framer-motion';
 
 interface LikeButtonProps {
   projectId: string;
   className?: string;
 }
 
-export function LikeButton({ projectId, className = '' }: LikeButtonProps) {
+export function LikeButton({ projectId }: LikeButtonProps) {
   const { user } = useAuth();
-  const [liked, setLiked] = useState(false);
+  const [isLiked, setIsLiked] = useState(false);
   const [likeCount, setLikeCount] = useState(0);
-  const [loading, setLoading] = useState(false);
+  const [isLoading, setIsLoading] = useState(false);
 
-  // Fetch like count and user like status
   useEffect(() => {
-    let mounted = true;
-    async function fetchLikes() {
-      setLoading(true);
-      // Get like count
-      const { count } = await supabase
-        .from('votes')
-        .select('*', { count: 'exact', head: true })
-        .eq('project_id', projectId);
-      if (mounted && typeof count === 'number') setLikeCount(count);
-      // Get user like
-      if (user) {
-        const { data } = await supabase
-          .from('votes')
-          .select('id')
+    if (!user) return;
+    
+    const fetchLikeStatus = async () => {
+      try {
+        const { data: existingLike } = await supabase
+          .from('project_likes')
+          .select('*')
           .eq('project_id', projectId)
           .eq('user_id', user.id)
           .single();
-        setLiked(!!data);
-      } else {
-        setLiked(false);
+
+        setIsLiked(!!existingLike);
+      } catch (error) {
+        console.error('Error fetching like status:', error);
       }
-      setLoading(false);
-    }
-    fetchLikes();
-    return () => { mounted = false; };
+    };
+
+    const fetchLikeCount = async () => {
+      try {
+        const { count } = await supabase
+          .from('project_likes')
+          .select('*', { count: 'exact', head: true })
+          .eq('project_id', projectId);
+
+        setLikeCount(count || 0);
+      } catch (error) {
+        console.error('Error fetching like count:', error);
+      }
+    };
+
+    fetchLikeStatus();
+    fetchLikeCount();
   }, [projectId, user]);
 
-  // Like/unlike handler
   const handleLike = async () => {
     if (!user) {
-      toast.error('Please sign in to like projects!');
+      // Handle not logged in state
       return;
     }
-    setLoading(true);
+
+    setIsLoading(true);
     try {
-      if (liked) {
+      if (isLiked) {
         // Unlike
-        const { error } = await supabase
-          .from('votes')
+        await supabase
+          .from('project_likes')
           .delete()
           .eq('project_id', projectId)
           .eq('user_id', user.id);
-        if (!error) {
-          setLiked(false);
-          setLikeCount((c) => Math.max(0, c - 1));
-        } else {
-          toast.error('Failed to unlike.');
-        }
+
+        setLikeCount(prev => prev - 1);
+        setIsLiked(false);
       } else {
         // Like
-        const { error } = await supabase
-          .from('votes')
-          .insert([{ project_id: projectId, user_id: user.id }]);
-        if (!error) {
-          setLiked(true);
-          setLikeCount((c) => c + 1);
-        } else {
-          toast.error('Failed to like.');
-        }
-      }
-    } finally {
-      setLoading(false);
-    }
-  };
+        await supabase
+          .from('project_likes')
+          .insert({
+            project_id: projectId,
+            user_id: user.id,
+          });
 
-  const handleUnlike = async () => {
-    setLoading(true);
-    try {
-      // Unlike
-      const { error } = await supabase
-        .from('votes')
-        .delete()
-        .eq('project_id', projectId)
-        .eq('user_id', user.id);
-      if (!error) {
-        setLiked(false);
-        setLikeCount((c) => Math.max(0, c - 1));
-      } else {
-        toast.error('Failed to unlike.');
+        setLikeCount(prev => prev + 1);
+        setIsLiked(true);
       }
+    } catch (error) {
+      console.error('Error toggling like:', error);
     } finally {
-      setLoading(false);
+      setIsLoading(false);
     }
   };
 
   return (
-    <Button
-      variant={liked ? 'primary' : 'outline'}
-      size="sm"
-      onClick={liked ? handleUnlike : handleLike}
-      disabled={loading}
-      icon={loading ? <Loader2 className="w-4 h-4 animate-spin" /> : (liked ? <Heart className="w-4 h-4 text-red-500" /> : <Heart className="w-4 h-4" />)}
+    <motion.button
+      onClick={handleLike}
+      disabled={isLoading || !user}
+      className={`flex items-center gap-2 px-3 py-2 rounded-lg transition-colors ${
+        isLiked
+          ? 'bg-red-500 text-white hover:bg-red-600'
+          : 'bg-gray-100 text-gray-700 hover:bg-gray-200'
+      } ${!user ? 'opacity-50 cursor-not-allowed' : 'cursor-pointer'}`}
+      whileHover={user && !isLoading ? { scale: 1.05 } : {}}
+      whileTap={user && !isLoading ? { scale: 0.95 } : {}}
+      aria-label={isLiked ? 'Unlike project' : 'Like project'}
     >
-      {likeCount}
-    </Button>
+      <Heart
+        className={`w-5 h-5 ${isLiked ? 'fill-current' : ''}`}
+        aria-hidden="true"
+      />
+      <span className="text-sm font-medium">{likeCount}</span>
+    </motion.button>
   );
 } 

@@ -1,8 +1,8 @@
-import React, { useState } from 'react';
+import { useState } from 'react';
 import { useNavigate, useSearchParams, useLocation } from 'react-router-dom';
 import { motion, AnimatePresence } from 'framer-motion';
 import { useForm } from 'react-hook-form';
-import { Mail, Lock, User, Eye, EyeOff, Code2, Zap, Rocket, Flame } from 'lucide-react';
+import { Mail, Lock, User, Eye, EyeOff, Zap, Rocket, Flame } from 'lucide-react';
 import { useAuth } from '@/hooks/useAuth';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';

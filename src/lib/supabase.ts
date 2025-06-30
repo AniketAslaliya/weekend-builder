@@ -59,7 +59,7 @@ if (!validateEnvVars()) {
 }
 
 // Add error handling for network issues
-supabase.auth.onAuthStateChange((event, session) => {
+supabase.auth.onAuthStateChange((event) => {
   if (event === 'TOKEN_REFRESHED') {
     console.log('Token refreshed successfully');
   } else if (event === 'SIGNED_OUT') {

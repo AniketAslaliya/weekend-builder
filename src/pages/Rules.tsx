@@ -1,23 +1,13 @@
-import React from 'react';
 import { motion } from 'framer-motion';
 import { 
   BookOpen, 
-  Shield, 
-  Users, 
-  Heart, 
-  Code2, 
-  Award, 
-  AlertTriangle, 
-  CheckCircle,
-  Zap,
-  Star,
-  Target,
-  Globe
+  Users,
+  Heart,
+  Code2,
+  Shield
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
 import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
-import { PillChip } from '@/components/ui/PillChip';
 
 export function Rules() {
   return (

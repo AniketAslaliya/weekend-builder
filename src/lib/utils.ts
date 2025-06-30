@@ -42,13 +42,6 @@ export function formatRelativeTime(date: string | Date) {
 }
 
 export function generateAvatarUrl(name: string, size: number = 100) {
-  const initials = name
-    .split(' ')
-    .map(word => word[0])
-    .join('')
-    .toUpperCase()
-    .slice(0, 2);
-  
   return `https://ui-avatars.com/api/?name=${encodeURIComponent(name)}&size=${size}&background=3b82f6&color=ffffff&bold=true&format=svg`;
 }
 
