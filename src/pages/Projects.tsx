@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion, AnimatePresence } from 'framer-motion';
 import { 
   Search, 
@@ -15,7 +15,8 @@ import {
   Eye,
   Zap,
   Award,
-  Code2
+  Code2,
+  Loader2
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -25,130 +26,96 @@ import { GlassyCard } from '@/components/ui/GlassyCard';
 import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
 import { LikeButton } from '@/components/ui/LikeButton';
+import { supabase } from '@/lib/supabase';
+import { useAuth } from '@/hooks/useAuth';
+import { toast } from 'react-hot-toast';
+
+interface Project {
+  id: string;
+  title: string;
+  description: string | null;
+  short_description: string | null;
+  creator_id: string;
+  creator: {
+    display_name: string;
+    avatar_url: string | null;
+  };
+  votes: number;
+  comments: number;
+  views: number;
+  tags: string[];
+  project_type: string;
+  status: string;
+  demo_url: string | null;
+  repo_url: string | null;
+  image: string | null;
+  submitted_at: string | null;
+  event: {
+    title: string;
+  } | null;
+  trending: boolean;
+  featured: boolean;
+}
 
 export function Projects() {
+  const { user } = useAuth();
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedFilter, setSelectedFilter] = useState('all');
   const [selectedTags, setSelectedTags] = useState<string[]>([]);
+  const [projects, setProjects] = useState<Project[]>([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState<string | null>(null);
 
-  // Mock data
-  const projects = [
-    {
-      id: '1',
-      title: 'AI Recipe Generator',
-      description: 'Generate personalized recipes based on dietary preferences and available ingredients using advanced AI algorithms and machine learning models',
-      shortDescription: 'AI-powered recipe generation for personalized cooking experiences',
-      creator: {
-        name: 'Sarah Chen',
-        avatar: 'https://images.pexels.com/photos/2379004/pexels-photo-2379004.jpeg?auto=compress&cs=tinysrgb&w=100'
-      },
-      team: [
-        { name: 'Sarah Chen', role: 'Creator' },
-        { name: 'Mike Johnson', role: 'Developer' }
-      ],
-      votes: 127,
-      comments: 23,
-      views: 1240,
-      tags: ['AI', 'Food', 'Health', 'React'],
-      projectType: 'web',
-      status: 'submitted',
-      demoUrl: 'https://ai-recipe-gen.demo',
-      repoUrl: 'https://github.com/sarahc/ai-recipe-gen',
-      image: 'https://images.pexels.com/photos/1640777/pexels-photo-1640777.jpeg?auto=compress&cs=tinysrgb&w=400',
-      submittedAt: '2024-01-15T10:30:00Z',
-      eventTitle: 'AI-Powered Solutions Weekend',
-      trending: true,
-      featured: false
-    },
-    {
-      id: '2',
-      title: 'Smart Study Planner',
-      description: 'AI-powered study scheduler that adapts to your learning style, tracks progress, and optimizes study sessions for maximum retention and productivity',
-      shortDescription: 'Intelligent study planning with AI optimization and progress tracking',
-      creator: {
-        name: 'Alex Kumar',
-        avatar: 'https://images.pexels.com/photos/2182970/pexels-photo-2182970.jpeg?auto=compress&cs=tinysrgb&w=100'
-      },
-      team: [
-        { name: 'Alex Kumar', role: 'Creator' }
-      ],
-      votes: 93,
-      comments: 15,
-      views: 890,
-      tags: ['AI', 'Education', 'Productivity', 'Vue'],
-      projectType: 'web',
-      status: 'submitted',
-      demoUrl: 'https://smart-study.demo',
-      repoUrl: 'https://github.com/alexk/smart-study',
-      image: 'https://images.pexels.com/photos/159711/books-bookstore-book-reading-159711.jpeg?auto=compress&cs=tinysrgb&w=400',
-      submittedAt: '2024-01-14T15:45:00Z',
-      eventTitle: 'AI-Powered Solutions Weekend',
-      trending: false,
-      featured: true
-    },
-    {
-      id: '3',
-      title: 'Mood Music Matcher',
-      description: 'Detects your current mood through voice analysis and facial recognition, then creates perfect playlists that match your emotional state using advanced AI',
-      shortDescription: 'Mood detection with personalized music curation and emotional AI',
-      creator: {
-        name: 'Jamie Rodriguez',
-        avatar: 'https://images.pexels.com/photos/1239291/pexels-photo-1239291.jpeg?auto=compress&cs=tinysrgb&w=100'
-      },
-      team: [
-        { name: 'Jamie Rodriguez', role: 'Creator' },
-        { name: 'Lisa Park', role: 'Designer' },
-        { name: 'Tom Wilson', role: 'AI Engineer' }
-      ],
-      votes: 156,
-      comments: 34,
-      views: 2100,
-      tags: ['AI', 'Music', 'Wellness', 'Python'],
-      projectType: 'mobile',
-      status: 'submitted',
-      demoUrl: 'https://mood-music.demo',
-      repoUrl: 'https://github.com/jamier/mood-music',
-      image: 'https://images.pexels.com/photos/3756766/pexels-photo-3756766.jpeg?auto=compress&cs=tinysrgb&w=400',
-      submittedAt: '2024-01-13T12:20:00Z',
-      eventTitle: 'AI-Powered Solutions Weekend',
-      trending: true,
-      featured: true
-    },
-    {
-      id: '4',
-      title: 'EcoTrack Carbon Monitor',
-      description: 'Track your daily carbon footprint through smart integrations with transportation apps, energy bills, and shopping habits to promote sustainable living',
-      shortDescription: 'Personal carbon footprint tracking and reduction with smart insights',
-      creator: {
-        name: 'Emma Thompson',
-        avatar: 'https://images.pexels.com/photos/1130626/pexels-photo-1130626.jpeg?auto=compress&cs=tinysrgb&w=100'
-      },
-      team: [
-        { name: 'Emma Thompson', role: 'Creator' },
-        { name: 'David Lee', role: 'Backend Developer' }
-      ],
-      votes: 89,
-      comments: 19,
-      views: 650,
-      tags: ['Sustainability', 'Health', 'Mobile', 'React Native'],
-      projectType: 'mobile',
-      status: 'submitted',
-      demoUrl: 'https://ecotrack.demo',
-      repoUrl: 'https://github.com/emma/ecotrack',
-      image: 'https://images.pexels.com/photos/1647962/pexels-photo-1647962.jpeg?auto=compress&cs=tinysrgb&w=400',
-      submittedAt: '2024-01-12T09:15:00Z',
-      eventTitle: 'AI-Powered Solutions Weekend',
-      trending: false,
-      featured: false
-    }
-  ];
+  // Fetch projects from Supabase
+  useEffect(() => {
+    const fetchProjects = async () => {
+      try {
+        setLoading(true);
+        
+        const { data, error } = await supabase
+          .from('projects')
+          .select(`
+            *,
+            creator:profiles!creator_id(display_name, avatar_url),
+            event:events(title)
+          `)
+          .order('created_at', { ascending: false });
+
+        if (error) {
+          console.error('Error fetching projects:', error);
+          setError('Failed to load projects');
+          return;
+        }
+
+        // Transform the data to match our interface
+        const transformedProjects = data?.map(project => ({
+          ...project,
+          votes: project.vote_count || 0,
+          comments: project.comment_count || 0,
+          views: 0, // We don't have view tracking yet
+          trending: project.vote_count > 50, // Simple trending logic
+          featured: project.is_featured || false,
+          image: project.images?.[0] || 'https://images.pexels.com/photos/3183150/pexels-photo-3183150.jpeg?auto=compress&cs=tinysrgb&w=400'
+        })) || [];
+
+        setProjects(transformedProjects);
+      } catch (err) {
+        console.error('Error fetching projects:', err);
+        setError('Failed to load projects');
+      } finally {
+        setLoading(false);
+      }
+    };
+
+    fetchProjects();
+  }, []);
 
   const filters = [
     { id: 'all', label: 'All Projects', count: projects.length, icon: Star },
     { id: 'trending', label: 'Trending', count: projects.filter(p => p.trending).length, icon: TrendingUp },
     { id: 'featured', label: 'Featured', count: projects.filter(p => p.featured).length, icon: Award },
-    { id: 'web', label: 'Web Apps', count: projects.filter(p => p.projectType === 'web').length, icon: ExternalLink },
-    { id: 'mobile', label: 'Mobile Apps', count: projects.filter(p => p.projectType === 'mobile').length, icon: Users },
+    { id: 'web', label: 'Web Apps', count: projects.filter(p => p.project_type === 'web').length, icon: ExternalLink },
+    { id: 'mobile', label: 'Mobile Apps', count: projects.filter(p => p.project_type === 'mobile').length, icon: Users },
     { id: 'ai', label: 'AI Projects', count: projects.filter(p => p.tags.some(tag => tag.toLowerCase().includes('ai'))).length, icon: Zap }
   ];
 
@@ -156,11 +123,11 @@ export function Projects() {
 
   const filteredProjects = projects.filter(project => {
     const matchesSearch = project.title.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.description.toLowerCase().includes(searchQuery.toLowerCase()) ||
-                         project.creator.name.toLowerCase().includes(searchQuery.toLowerCase());
+                         (project.description?.toLowerCase().includes(searchQuery.toLowerCase()) || false) ||
+                         project.creator.display_name.toLowerCase().includes(searchQuery.toLowerCase());
     
     const matchesFilter = selectedFilter === 'all' || 
-                         project.projectType === selectedFilter ||
+                         project.project_type === selectedFilter ||
                          (selectedFilter === 'ai' && project.tags.some(tag => tag.toLowerCase().includes('ai'))) ||
                          (selectedFilter === 'trending' && project.trending) ||
                          (selectedFilter === 'featured' && project.featured);
@@ -178,6 +145,78 @@ export function Projects() {
         : [...prev, tag]
     );
   };
+
+  const createTestProject = async () => {
+    if (!user) {
+      toast.error('Please sign in to create a test project');
+      return;
+    }
+
+    try {
+      const { data: profile } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (!profile) {
+        toast.error('Profile not found');
+        return;
+      }
+
+      const testProject = {
+        event_id: null,
+        creator_id: profile.id,
+        title: 'Test Project - ' + new Date().toLocaleTimeString(),
+        description: 'This is a test project created to verify the submission functionality.',
+        short_description: 'Test project for verification',
+        tags: ['test', 'demo', 'verification'],
+        demo_url: 'https://example.com',
+        repo_url: 'https://github.com/example/test',
+        status: 'submitted',
+        submitted_at: new Date().toISOString()
+      };
+
+      const { error } = await supabase
+        .from('projects')
+        .insert([testProject]);
+
+      if (error) {
+        console.error('Error creating test project:', error);
+        toast.error('Failed to create test project');
+      } else {
+        toast.success('Test project created! Refreshing...');
+        setTimeout(() => window.location.reload(), 1000);
+      }
+    } catch (error) {
+      console.error('Error creating test project:', error);
+      toast.error('Failed to create test project');
+    }
+  };
+
+  if (loading) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900 flex items-center justify-center">
+        <div className="text-center">
+          <Loader2 className="w-8 h-8 text-accent-400 animate-spin mx-auto mb-4" />
+          <p className="text-light-300">Loading projects...</p>
+        </div>
+      </div>
+    );
+  }
+
+  if (error) {
+    return (
+      <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900 flex items-center justify-center">
+        <div className="text-center">
+          <p className="text-red-400 mb-4">{error}</p>
+          <Button variant="primary" onClick={() => window.location.reload()}>
+            Try Again
+          </Button>
+        </div>
+      </div>
+    );
+  }
 
   return (
     <div className="min-h-screen bg-gradient-to-br from-dark-950 via-dark-900 to-accent-900">
@@ -198,9 +237,21 @@ export function Projects() {
               <h1 className="text-5xl font-bold text-white mb-4">
                 Discover Amazing Projects
               </h1>
-              <p className="text-xl text-light-300 max-w-2xl">
-                Explore incredible projects built by our community of weekend builders from around the world
+              <p className="text-xl text-light-300 max-w-3xl">
+                explore incredible projects built by our community of weekend builders
               </p>
+              {user && (
+                <div className="mt-6">
+                  <Button 
+                    variant="outline" 
+                    size="sm" 
+                    onClick={createTestProject}
+                    className="bg-accent-500/10 border-accent-400/30 text-accent-400 hover:bg-accent-500/20"
+                  >
+                    🧪 Create Test Project
+                  </Button>
+                </div>
+              )}
             </div>
             <Button variant="primary" size="lg" glow>
               <Zap className="w-5 h-5 mr-2" />
@@ -335,12 +386,12 @@ export function Projects() {
                     <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-transparent to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300">
                       <div className="absolute bottom-4 left-4 right-4 flex justify-between items-end">
                         <div className="flex space-x-2">
-                          {project.demoUrl && (
+                          {project.demo_url && (
                             <Button size="sm" className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30">
                               <ExternalLink className="w-4 h-4" />
                             </Button>
                           )}
-                          {project.repoUrl && (
+                          {project.repo_url && (
                             <Button size="sm" className="bg-white/20 backdrop-blur-sm border-white/30 text-white hover:bg-white/30">
                               <Github className="w-4 h-4" />
                             </Button>
@@ -367,7 +418,7 @@ export function Projects() {
                       </div>
                       <div className="flex items-center space-x-1 text-white text-sm bg-black/30 backdrop-blur-sm rounded-full px-2 py-1">
                         <Users className="w-4 h-4" />
-                        <span>{project.team.length}</span>
+                        <span>{project.creator.display_name}</span>
                       </div>
                     </div>
                   </div>
@@ -376,7 +427,7 @@ export function Projects() {
                     {/* Event Badge */}
                     <Badge variant="primary" size="sm">
                       <Calendar className="w-3 h-3 mr-1" />
-                      {project.eventTitle}
+                      {project.event?.title}
                     </Badge>
 
                     {/* Title & Description */}
@@ -385,23 +436,20 @@ export function Projects() {
                         {project.title}
                       </h3>
                       <p className="text-light-300 text-sm line-clamp-2 leading-relaxed">
-                        {project.shortDescription}
+                        {project.short_description}
                       </p>
                     </div>
 
                     {/* Creator */}
                     <div className="flex items-center space-x-3">
                       <img
-                        src={project.creator.avatar}
-                        alt={project.creator.name}
+                        src={project.creator.avatar_url}
+                        alt={project.creator.display_name}
                         className="w-10 h-10 rounded-full object-cover border-2 border-accent-600"
                       />
                       <div>
                         <p className="font-semibold text-white">
-                          {project.creator.name}
-                        </p>
-                        <p className="text-sm text-light-400">
-                          {project.team.length > 1 ? `+ ${project.team.length - 1} teammates` : 'Solo project'}
+                          {project.creator.display_name}
                         </p>
                       </div>
                     </div>
@@ -438,10 +486,10 @@ export function Projects() {
                         </motion.div>
                       </div>
                       <Badge 
-                        variant={project.projectType === 'web' ? 'primary' : project.projectType === 'mobile' ? 'success' : 'warning'} 
+                        variant={project.project_type === 'web' ? 'primary' : project.project_type === 'mobile' ? 'success' : 'warning'} 
                         size="sm"
                       >
-                        {project.projectType}
+                        {project.project_type}
                       </Badge>
                     </div>
                   </div>

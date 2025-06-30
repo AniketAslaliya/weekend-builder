@@ -12,11 +12,12 @@ import {
   Users,
   Tag
 } from 'lucide-react';
-import { Button } from '@/components/ui/Button';
-import { Input } from '@/components/ui/Input';
-import { Card } from '@/components/ui/Card';
-import { Badge } from '@/components/ui/Badge';
-import { useAuth } from '@/hooks/useAuth';
+import { Button } from './Button';
+import { Input } from './Input';
+import { Card } from './Card';
+import { Badge } from './Badge';
+import { useAuth } from '../../hooks/useAuth';
+import { supabase } from '../../lib/supabase';
 import toast from 'react-hot-toast';
 
 interface ProjectSubmissionModalProps {
@@ -68,10 +69,68 @@ export function ProjectSubmissionModal({
     setLoading(true);
     
     try {
-      // Here you would integrate with Supabase to save the project
-      // For now, we'll simulate the submission
-      await new Promise(resolve => setTimeout(resolve, 2000));
-      
+      // Get user profile to get creator_id
+      const { data: profile, error: profileError } = await supabase
+        .from('profiles')
+        .select('id')
+        .eq('id', user.id)
+        .single();
+
+      if (profileError) {
+        console.error('Error fetching profile:', profileError);
+        toast.error('Failed to fetch user profile');
+        return;
+      }
+
+      // Prepare project data
+      const projectData = {
+        event_id: eventId || null,
+        creator_id: profile.id,
+        title: formData.title,
+        description: formData.description,
+        short_description: formData.shortDescription,
+        tags: formData.tags,
+        demo_url: formData.demoUrl || null,
+        repo_url: formData.repoUrl || null,
+        video_url: formData.videoUrl || null,
+        images: formData.images,
+        status: 'submitted',
+        looking_for_team: formData.lookingForTeam,
+        team_needs: formData.teamNeeds,
+        submitted_at: new Date().toISOString()
+      };
+
+      // Insert project into database
+      const { data: project, error: insertError } = await supabase
+        .from('projects')
+        .insert([projectData])
+        .select()
+        .single();
+
+      if (insertError) {
+        console.error('Error inserting project:', insertError);
+        toast.error('Failed to submit project. Please try again.');
+        return;
+      }
+
+      // If team members were added, create team entries
+      if (formData.teamMembers.length > 1) {
+        const teamData = formData.teamMembers.map(member => ({
+          project_id: project.id,
+          user_id: profile.id, // For now, all team members are the same user
+          role: member.role === 'creator' ? 'creator' : 'member'
+        }));
+
+        const { error: teamError } = await supabase
+          .from('teams')
+          .insert(teamData);
+
+        if (teamError) {
+          console.error('Error creating team:', teamError);
+          // Don't fail the submission for team errors
+        }
+      }
+
       toast.success('🎉 project submitted successfully!');
       onClose();
       setCurrentStep(1);
@@ -89,7 +148,8 @@ export function ProjectSubmissionModal({
         teamNeeds: []
       });
     } catch (error) {
-      toast.error('failed to submit project. please try again.');
+      console.error('Error submitting project:', error);
+      toast.error('Failed to submit project. Please try again.');
     } finally {
       setLoading(false);
     }
