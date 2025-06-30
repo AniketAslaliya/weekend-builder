@@ -27,7 +27,8 @@ import {
   Target,
   Loader2,
   BadgeCheck,
-  UserCircle
+  UserCircle,
+  Upload
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -286,6 +287,26 @@ export function Profile() {
     }
   };
 
+  // AnimatedCounter component
+  const AnimatedCounter = ({ value }: { value: number }) => {
+    const [display, setDisplay] = useState(0);
+    useEffect(() => {
+      let start = 0;
+      const end = value;
+      if (start === end) return;
+      let increment = end > start ? 1 : -1;
+      let stepTime = Math.abs(Math.floor(1000 / (end - start)));
+      let current = start;
+      const timer = setInterval(() => {
+        current += increment;
+        setDisplay(current);
+        if (current === end) clearInterval(timer);
+      }, Math.max(stepTime, 20));
+      return () => clearInterval(timer);
+    }, [value]);
+    return <span>{display}</span>;
+  };
+
   if (loading) {
     return (
       <div className="min-h-screen bg-dark-950 flex items-center justify-center">
@@ -354,109 +375,250 @@ export function Profile() {
 
         {/* Edit Profile Modal */}
         {editOpen && (
-          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
-            <GlassyCard className="w-full max-w-lg relative">
-              <button onClick={() => setEditOpen(false)} className="absolute top-4 right-4 text-accent-400 hover:text-accent-600">
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60 backdrop-blur-sm">
+            <motion.div
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-gradient-to-br from-dark-900 via-dark-800 to-dark-900 rounded-2xl p-8 max-w-2xl w-full relative shadow-2xl border border-accent-400/30 overflow-hidden max-h-[90vh] overflow-y-auto"
+            >
+              {/* Background Pattern */}
+              <div className="absolute inset-0 bg-gradient-to-br from-accent-500/5 to-transparent"></div>
+              <div className="absolute top-0 right-0 w-32 h-32 bg-accent-500/10 rounded-full blur-3xl"></div>
+              <div className="absolute bottom-0 left-0 w-24 h-24 bg-purple-500/10 rounded-full blur-2xl"></div>
+              
+              {/* Close Button */}
+              <button 
+                className="absolute top-4 right-4 text-light-400 hover:text-accent-400 transition-colors z-10"
+                onClick={() => setEditOpen(false)}
+              >
                 <X className="w-6 h-6" />
               </button>
-              <h2 className="text-2xl font-bold text-accent-500 mb-6 text-center">Edit Profile</h2>
-              <div className="flex flex-col items-center mb-6">
-                <div className="w-24 h-24 rounded-full border-4 border-accent-400 shadow bg-white overflow-hidden flex items-center justify-center mb-2">
-                  {avatarPreview ? (
-                    <img src={avatarPreview} alt="avatar preview" className="w-full h-full object-cover" />
-                  ) : (
-                    <UserCircle className="w-20 h-20 text-accent-400" />
-                  )}
+
+              {/* Header */}
+              <div className="relative z-10 mb-8">
+                <div className="flex items-center space-x-3 mb-4">
+                  <div className="w-12 h-12 bg-gradient-to-r from-accent-500 to-purple-500 rounded-xl flex items-center justify-center">
+                    <Edit3 className="w-6 h-6 text-white" />
+                  </div>
+                  <div>
+                    <h2 className="text-3xl font-bold text-white">Edit Profile</h2>
+                    <p className="text-light-400">Customize your builder identity</p>
+                  </div>
                 </div>
-                <input
-                  type="file"
-                  accept="image/*"
-                  ref={fileInputRef}
-                  onChange={handleAvatarChange}
-                  className="hidden"
-                />
-                <button
-                  onClick={() => fileInputRef.current && fileInputRef.current.click()}
-                  className="mt-2 px-4 py-1 rounded-full bg-accent-500 text-white font-semibold hover:bg-accent-600 transition-all"
-                >
-                  Change Avatar
-                </button>
               </div>
-              <div className="space-y-4">
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.display_name}
-                  onChange={e => setEditData(prev => ({ ...prev, display_name: e.target.value }))}
-                  placeholder="Display Name"
-                />
-                <textarea
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.bio}
-                  onChange={e => setEditData(prev => ({ ...prev, bio: e.target.value }))}
-                  placeholder="Bio"
-                  rows={3}
-                />
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.location}
-                  onChange={e => setEditData(prev => ({ ...prev, location: e.target.value }))}
-                  placeholder="Location"
-                />
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.github_username}
-                  onChange={e => setEditData(prev => ({ ...prev, github_username: e.target.value }))}
-                  placeholder="GitHub Username"
-                />
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.twitter_username}
-                  onChange={e => setEditData(prev => ({ ...prev, twitter_username: e.target.value }))}
-                  placeholder="Twitter Username"
-                />
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.linkedin_username}
-                  onChange={e => setEditData(prev => ({ ...prev, linkedin_username: e.target.value }))}
-                  placeholder="LinkedIn Username"
-                />
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.instagram_username}
-                  onChange={e => setEditData(prev => ({ ...prev, instagram_username: e.target.value }))}
-                  placeholder="Instagram Username"
-                />
-                <input
-                  className="w-full rounded-lg border border-accent-400 bg-white text-primary px-4 py-2 font-semibold"
-                  value={editData.website}
-                  onChange={e => setEditData(prev => ({ ...prev, website: e.target.value }))}
-                  placeholder="Website"
-                />
+
+              {/* Avatar Section */}
+              <div className="relative z-10 mb-8">
+                <div className="flex flex-col items-center">
+                  <div className="relative group mb-4">
+                    <div className="w-32 h-32 rounded-full border-4 border-accent-400/50 shadow-2xl overflow-hidden bg-gradient-to-br from-accent-500/20 to-purple-500/20">
+                      {avatarPreview ? (
+                        <img 
+                          src={avatarPreview} 
+                          alt="avatar preview" 
+                          className="w-full h-full object-cover"
+                        />
+                      ) : (
+                        <div className="w-full h-full flex items-center justify-center">
+                          <UserCircle className="w-20 h-20 text-accent-400" />
+                        </div>
+                      )}
+                    </div>
+                    <button 
+                      onClick={() => fileInputRef.current?.click()} 
+                      className="absolute bottom-2 right-2 bg-gradient-to-r from-accent-500 to-purple-500 text-white rounded-full p-3 shadow-lg group-hover:scale-110 transition-all duration-300 border-2 border-white"
+                    >
+                      <Upload className="w-5 h-5" />
+                    </button>
+                    <input 
+                      type="file" 
+                      ref={fileInputRef} 
+                      className="hidden" 
+                      accept="image/*" 
+                      onChange={handleAvatarChange} 
+                    />
+                  </div>
+                  <p className="text-light-400 text-sm text-center">
+                    Click the camera icon to upload a new avatar
+                  </p>
+                </div>
               </div>
-              <div className="flex justify-end mt-6 gap-4">
-                <button
-                  onClick={() => setEditOpen(false)}
-                  className="px-6 py-2 rounded-full bg-white/20 text-accent-500 font-bold hover:bg-white/40 transition-all"
-                >
-                  Cancel
-                </button>
-                <button
-                  onClick={saveEdit}
-                  className="px-6 py-2 rounded-full bg-accent-500 text-white font-bold hover:bg-accent-600 transition-all shadow-lg"
-                >
-                  Save Changes
-                </button>
+
+              {/* Form */}
+              <div className="relative z-10 space-y-6">
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-accent-400 mb-2">Display Name</label>
+                    <Input 
+                      value={editData.display_name} 
+                      onChange={e => setEditData({ ...editData, display_name: e.target.value })} 
+                      placeholder="Your awesome name" 
+                      className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-accent-400 mb-2">Location</label>
+                    <Input 
+                      value={editData.location} 
+                      onChange={e => setEditData({ ...editData, location: e.target.value })} 
+                      placeholder="Where are you building?" 
+                      className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div>
+                  <label className="block text-sm font-semibold text-accent-400 mb-2">Bio</label>
+                  <textarea 
+                    value={editData.bio} 
+                    onChange={e => setEditData({ ...editData, bio: e.target.value })} 
+                    placeholder="Tell us about your building journey..." 
+                    rows={3}
+                    className="w-full bg-white/10 border border-accent-400/30 rounded-lg p-3 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all resize-none"
+                  />
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-accent-400 mb-2">GitHub</label>
+                    <Input 
+                      value={editData.github_username} 
+                      onChange={e => setEditData({ ...editData, github_username: e.target.value })} 
+                      placeholder="github-username" 
+                      className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-accent-400 mb-2">Twitter</label>
+                    <Input 
+                      value={editData.twitter_username} 
+                      onChange={e => setEditData({ ...editData, twitter_username: e.target.value })} 
+                      placeholder="twitter-username" 
+                      className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                  </div>
+                </div>
+
+                <div className="grid md:grid-cols-2 gap-6">
+                  <div>
+                    <label className="block text-sm font-semibold text-accent-400 mb-2">LinkedIn</label>
+                    <Input 
+                      value={editData.linkedin_username} 
+                      onChange={e => setEditData({ ...editData, linkedin_username: e.target.value })} 
+                      placeholder="linkedin-username" 
+                      className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                  </div>
+                  <div>
+                    <label className="block text-sm font-semibold text-accent-400 mb-2">Website</label>
+                    <Input 
+                      value={editData.website} 
+                      onChange={e => setEditData({ ...editData, website: e.target.value })} 
+                      placeholder="your-website.com" 
+                      className="bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                  </div>
+                </div>
+
+                {/* Skills Section */}
+                <div>
+                  <label className="block text-sm font-semibold text-accent-400 mb-2">Skills</label>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {editData.skills.map((skill, index) => (
+                      <PillChip key={index} className="bg-accent-500/20 text-accent-400 border-accent-400/30">
+                        {skill}
+                        <button 
+                          onClick={() => removeSkill(skill)}
+                          className="ml-2 text-accent-400 hover:text-red-400 transition-colors"
+                        >
+                          ×
+                        </button>
+                      </PillChip>
+                    ))}
+                  </div>
+                  <div className="flex space-x-2">
+                    <Input 
+                      value={newSkill} 
+                      onChange={(e) => setNewSkill(e.target.value)}
+                      placeholder="Add a skill..." 
+                      className="flex-1 bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={addSkill}
+                      disabled={!newSkill.trim()}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Interests Section */}
+                <div>
+                  <label className="block text-sm font-semibold text-accent-400 mb-2">Interests</label>
+                  <div className="flex flex-wrap gap-2 mb-3">
+                    {editData.interests.map((interest, index) => (
+                      <PillChip key={index} className="bg-purple-500/20 text-purple-400 border-purple-400/30">
+                        {interest}
+                        <button 
+                          onClick={() => removeInterest(interest)}
+                          className="ml-2 text-purple-400 hover:text-red-400 transition-colors"
+                        >
+                          ×
+                        </button>
+                      </PillChip>
+                    ))}
+                  </div>
+                  <div className="flex space-x-2">
+                    <Input 
+                      value={newInterest} 
+                      onChange={(e) => setNewInterest(e.target.value)}
+                      placeholder="Add an interest..." 
+                      className="flex-1 bg-white/10 border-accent-400/30 text-white placeholder-light-400 focus:border-accent-500 focus:bg-white/20 transition-all"
+                    />
+                    <Button 
+                      variant="outline" 
+                      size="sm" 
+                      onClick={addInterest}
+                      disabled={!newInterest.trim()}
+                    >
+                      Add
+                    </Button>
+                  </div>
+                </div>
+
+                {/* Action Buttons */}
+                <div className="flex gap-4 pt-6 border-t border-accent-400/20">
+                  <Button 
+                    variant="outline" 
+                    onClick={() => setEditOpen(false)} 
+                    className="flex-1 bg-white/5 border-accent-400/30 text-white hover:bg-white/10"
+                  >
+                    Cancel
+                  </Button>
+                  <Button 
+                    variant="primary" 
+                    onClick={saveEdit} 
+                    loading={saving} 
+                    className="flex-1 bg-gradient-to-r from-accent-500 to-purple-500 hover:from-accent-600 hover:to-purple-600"
+                    glow
+                  >
+                    {saving ? 'Saving...' : 'Save Changes'}
+                  </Button>
+                </div>
               </div>
-            </GlassyCard>
+            </motion.div>
           </div>
         )}
 
         {/* Stats Cards */}
         <div className="flex flex-wrap gap-6 justify-center mb-8">
-          <StatCard label="total points" value={editData.total_points} icon={<Star className="w-6 h-6" />} />
-          <StatCard label="projects" value={editData.projects_count} icon={<Code2 className="w-6 h-6" />} />
-          <StatCard label="votes received" value={editData.votes_received} icon={<Heart className="w-6 h-6" />} />
-          <StatCard label="votes given" value={editData.votes_given} icon={<Zap className="w-6 h-6" />} />
+          <StatCard label="total points" value={<AnimatedCounter value={editData.total_points} />} icon={<Star className="w-6 h-6" />} />
+          <StatCard label="projects" value={<AnimatedCounter value={editData.projects_count} />} icon={<Code2 className="w-6 h-6" />} />
+          <StatCard label="votes received" value={<AnimatedCounter value={editData.votes_received} />} icon={<Heart className="w-6 h-6" />} />
+          <StatCard label="votes given" value={<AnimatedCounter value={editData.votes_given} />} icon={<Zap className="w-6 h-6" />} />
         </div>
 
         {/* Tabs */}

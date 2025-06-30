@@ -68,10 +68,17 @@ export function useAuth() {
         }
 
         // Show appropriate messages
-        if (event === 'SIGNED_IN' && session?.user) {
-          toast.success('🚀 Welcome back, builder!');
+        if (event === 'SIGNED_IN' && session?.user && event !== 'INITIAL_SESSION') {
+          // Only show welcome toast on actual sign-in, not on page refresh
+          const hasShownWelcome = sessionStorage.getItem('welcomeShown');
+          if (!hasShownWelcome) {
+            toast.success('🚀 Welcome back, builder!');
+            sessionStorage.setItem('welcomeShown', 'true');
+          }
         } else if (event === 'SIGNED_OUT') {
           toast.success('Signed out successfully');
+          // Clear the welcome flag when signing out
+          sessionStorage.removeItem('welcomeShown');
         }
       }
     );

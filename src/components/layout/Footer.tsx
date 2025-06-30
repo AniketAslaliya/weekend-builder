@@ -1,7 +1,9 @@
-import React from 'react';
+import React, { useState } from 'react';
 import { Link } from 'react-router-dom';
 import { motion } from 'framer-motion';
-import { Github, Twitter, Heart, Code2, Zap, Star } from 'lucide-react';
+import { Github, Twitter, Heart, Code2, Zap, Star, X } from 'lucide-react';
+import { Button } from '@/components/ui/Button';
+import { Input } from '@/components/ui/Input';
 
 export function Footer() {
   const footerSections = [
@@ -33,6 +35,8 @@ export function Footer() {
       ]
     }
   ];
+
+  const [showContactModal, setShowContactModal] = useState(false);
 
   return (
     <footer className="bg-dark-950 text-light-200 relative overflow-hidden">
@@ -150,6 +154,34 @@ export function Footer() {
             </span>
           </div>
         </motion.div>
+
+        <div className="mt-12 flex flex-col items-center">
+          <Button variant="primary" size="lg" glow onClick={() => setShowContactModal(true)}>
+            Sponsor or Contact Us
+          </Button>
+          <p className="text-light-400 mt-2">Email: <a href="mailto:aniketaslaliya@gmail.com" className="underline hover:text-accent-400">aniketaslaliya@gmail.com</a></p>
+        </div>
+
+        {showContactModal && (
+          <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+            <div className="bg-dark-900 rounded-xl p-8 max-w-md w-full relative">
+              <button className="absolute top-4 right-4 text-light-400 hover:text-accent-400" onClick={() => setShowContactModal(false)}>
+                <X className="w-5 h-5" />
+              </button>
+              <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+                <Star className="w-6 h-6 mr-2 text-accent-400" />
+                Contact & Sponsorship
+              </h2>
+              <form className="space-y-4">
+                <Input placeholder="Your Name" className="bg-white text-primary" />
+                <Input placeholder="Your Email" className="bg-white text-primary" />
+                <textarea placeholder="Message or sponsorship inquiry..." className="w-full p-3 rounded-lg bg-white text-primary min-h-[100px]" />
+                <Button variant="primary" type="submit" className="w-full">Send</Button>
+              </form>
+              <p className="text-xs text-light-400 mt-4">Or email us directly at <a href="mailto:aniketaslaliya@gmail.com" className="underline hover:text-accent-400">aniketaslaliya@gmail.com</a></p>
+            </div>
+          </div>
+        )}
       </div>
     </footer>
   );

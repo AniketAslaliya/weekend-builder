@@ -29,16 +29,16 @@ export function Button({
     'disabled:opacity-50 disabled:cursor-not-allowed',
     'transform hover:scale-[1.02] active:scale-[0.98]',
     {
-      // Variants - ChatGPT style
-      'bg-accent-600 hover:bg-accent-700 text-white focus:ring-accent-500 border border-accent-600':
+      // Variants - Fixed contrast
+      'bg-accent-600 hover:bg-accent-700 text-white focus:ring-accent-500 border border-accent-600 shadow-lg':
         variant === 'primary',
-      'bg-light-100 hover:bg-light-200 text-dark-900 focus:ring-light-300 border border-light-200':
+      'bg-white hover:bg-gray-100 text-dark-900 focus:ring-gray-300 border border-gray-200 shadow-lg':
         variant === 'secondary',
-      'border border-light-300 text-light-300 hover:bg-light-300 hover:text-dark-900 bg-transparent focus:ring-light-300':
+      'border-2 border-accent-500 text-accent-400 hover:bg-accent-500 hover:text-white bg-transparent focus:ring-accent-500 shadow-lg':
         variant === 'outline',
-      'text-light-300 hover:text-accent-400 hover:bg-dark-800 focus:ring-accent-500 bg-transparent':
+      'text-white hover:text-accent-400 hover:bg-dark-800 focus:ring-accent-500 bg-transparent':
         variant === 'ghost',
-      'bg-error-600 hover:bg-error-700 text-white focus:ring-error-500 border border-error-600':
+      'bg-red-600 hover:bg-red-700 text-white focus:ring-red-500 border border-red-600 shadow-lg':
         variant === 'danger',
       // Sizes
       'px-3 py-1.5 text-sm': size === 'sm',

@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Trophy, 
@@ -21,6 +21,26 @@ import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
 import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
+
+// AnimatedCounter component
+const AnimatedCounter = ({ value }: { value: number }) => {
+  const [display, setDisplay] = useState(0);
+  useEffect(() => {
+    let start = 0;
+    const end = value;
+    if (start === end) return;
+    let increment = end > start ? 1 : -1;
+    let stepTime = Math.abs(Math.floor(1000 / (end - start)));
+    let current = start;
+    const timer = setInterval(() => {
+      current += increment;
+      setDisplay(current);
+      if (current === end) clearInterval(timer);
+    }, Math.max(stepTime, 20));
+    return () => clearInterval(timer);
+  }, [value]);
+  return <span>{display}</span>;
+};
 
 export function Leaderboard() {
   const [selectedPeriod, setSelectedPeriod] = useState('all-time');
@@ -222,6 +242,13 @@ export function Leaderboard() {
     }
   };
 
+  const getRankHighlight = (rank) => {
+    if (rank === 1) return 'border-4 border-yellow-400 shadow-xl';
+    if (rank === 2) return 'border-4 border-gray-300 shadow-lg';
+    if (rank === 3) return 'border-4 border-amber-700 shadow-md';
+    return '';
+  };
+
   const renderLeaderboardItem = (entry: any, index: number) => {
     if (selectedCategory === 'projects') {
       return (
@@ -248,11 +275,11 @@ export function Leaderboard() {
                 <div className="flex items-center space-x-4 text-sm text-light-400">
                   <span className="flex items-center space-x-1">
                     <Heart className="w-4 h-4 text-red-500" />
-                    <span>{entry.votes} votes</span>
+                    <span><AnimatedCounter value={entry.votes} /></span>
                   </span>
                   <span className="flex items-center space-x-1">
                     <Users className="w-4 h-4 text-blue-500" />
-                    <span>{entry.views} views</span>
+                    <span><AnimatedCounter value={entry.views} /></span>
                   </span>
                 </div>
               </div>
@@ -281,11 +308,11 @@ export function Leaderboard() {
                 <div className="flex items-center space-x-4 text-sm text-light-400">
                   <span className="flex items-center space-x-1">
                     <Users className="w-4 h-4 text-blue-500" />
-                    <span>{entry.participants} participants</span>
+                    <span><AnimatedCounter value={entry.participants} /></span>
                   </span>
                   <span className="flex items-center space-x-1">
                     <Code2 className="w-4 h-4 text-green-500" />
-                    <span>{entry.projects} projects</span>
+                    <span><AnimatedCounter value={entry.projects} /></span>
                   </span>
                 </div>
               </div>
@@ -301,7 +328,7 @@ export function Leaderboard() {
 
     // Default: Overall/Streak leaderboard
     return (
-      <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)}`}>
+      <GlassyCard className={`hover:scale-105 transition-all duration-300 ${getRankColor(entry.rank)} ${getRankHighlight(entry.rank)}`}>
         <div className="flex items-center justify-between p-6">
           <div className="flex items-center space-x-6">
             <div className="flex items-center justify-center w-16 h-16">
@@ -332,27 +359,25 @@ export function Leaderboard() {
           <div className="grid grid-cols-2 md:grid-cols-4 gap-6 text-center">
             <div>
               <div className="text-2xl font-bold text-white">
-                {selectedCategory === 'streak' ? entry.streak : entry.points.toLocaleString()}
+                <AnimatedCounter value={entry.points} />
               </div>
-              <div className="text-sm text-light-400">
-                {selectedCategory === 'streak' ? 'weeks' : 'points'}
-              </div>
+              <div className="text-sm text-light-400">points</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-white">
-                {entry.projects}
+                <AnimatedCounter value={entry.projects} />
               </div>
               <div className="text-sm text-light-400">projects</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-white">
-                {entry.votes.toLocaleString()}
+                <AnimatedCounter value={entry.votes} />
               </div>
               <div className="text-sm text-light-400">votes</div>
             </div>
             <div>
               <div className="text-2xl font-bold text-white">
-                {entry.badges}
+                <AnimatedCounter value={entry.badges} />
               </div>
               <div className="text-sm text-light-400">badges</div>
             </div>
@@ -532,10 +557,10 @@ export function Leaderboard() {
                     )}
                     
                     <div className={`${actualIndex === 0 ? 'text-4xl' : 'text-3xl'} font-bold text-white mb-2`}>
-                      {selectedCategory === 'streak' ? actualEntry.streak : 
-                       selectedCategory === 'projects' ? actualEntry.votes :
-                       selectedCategory === 'events' ? actualEntry.participants :
-                       actualEntry.points?.toLocaleString()}
+                      {selectedCategory === 'streak' ? <AnimatedCounter value={actualEntry.streak} /> : 
+                       selectedCategory === 'projects' ? <AnimatedCounter value={actualEntry.votes} /> :
+                       selectedCategory === 'events' ? <AnimatedCounter value={actualEntry.participants} /> :
+                       <AnimatedCounter value={actualEntry.points} />}
                     </div>
                     <p className="text-light-400 text-sm mb-4">
                       {selectedCategory === 'streak' ? 'weeks' : 

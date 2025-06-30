@@ -1,4 +1,4 @@
-import React, { useState } from 'react';
+import React, { useState, useRef } from 'react';
 import { motion } from 'framer-motion';
 import { 
   Zap, 
@@ -15,7 +15,8 @@ import {
   Check,
   Plus,
   Save,
-  Upload
+  Upload,
+  X
 } from 'lucide-react';
 import { Button } from '@/components/ui/Button';
 import { Input } from '@/components/ui/Input';
@@ -33,6 +34,7 @@ export function AIBuilder() {
   const [generatedCode, setGeneratedCode] = useState('');
   const [copied, setCopied] = useState(false);
   const [showSubmissionModal, setShowSubmissionModal] = useState(false);
+  const [showRunModal, setShowRunModal] = useState(false);
   const [savedProjects, setSavedProjects] = useState([
     {
       id: '1',
@@ -51,6 +53,7 @@ export function AIBuilder() {
       status: 'draft'
     }
   ]);
+  const downloadRef = useRef<HTMLAnchorElement>(null);
 
   const templates = [
     {
@@ -202,6 +205,18 @@ export default App;`;
 
   const handleSubmitToEvent = () => {
     setShowSubmissionModal(true);
+  };
+
+  const handleDownload = () => {
+    if (!generatedCode) return;
+    const blob = new Blob([generatedCode], { type: 'text/plain' });
+    const url = URL.createObjectURL(blob);
+    if (downloadRef.current) {
+      downloadRef.current.href = url;
+      downloadRef.current.download = `${projectIdea.replace(/\s+/g, '_') || 'ai_project'}.js`;
+      downloadRef.current.click();
+      setTimeout(() => URL.revokeObjectURL(url), 1000);
+    }
   };
 
   return (
@@ -387,12 +402,13 @@ export default App;`;
                 transition={{ duration: 0.6 }}
                 className="grid grid-cols-2 gap-4"
               >
-                <Button variant="primary" size="lg" icon={<Play className="w-5 h-5" />}>
+                <Button variant="primary" size="lg" icon={<Play className="w-5 h-5" />} onClick={() => setShowRunModal(true)}>
                   run project
                 </Button>
-                <Button variant="outline" size="lg" icon={<Download className="w-5 h-5" />}>
+                <Button variant="outline" size="lg" icon={<Download className="w-5 h-5" />} onClick={handleDownload}>
                   download
                 </Button>
+                <a ref={downloadRef} style={{ display: 'none' }} />
               </motion.div>
             )}
           </motion.div>
@@ -516,6 +532,31 @@ export default App;`;
         eventId="1"
         eventTitle="ai-powered solutions weekend"
       />
+
+      {showRunModal && (
+        <div className="fixed inset-0 z-50 flex items-center justify-center bg-black/60">
+          <div className="bg-dark-900 rounded-xl p-8 max-w-lg w-full relative">
+            <button className="absolute top-4 right-4 text-light-400 hover:text-accent-400" onClick={() => setShowRunModal(false)}>
+              <X className="w-5 h-5" />
+            </button>
+            <h2 className="text-2xl font-bold text-white mb-4 flex items-center">
+              <Play className="w-6 h-6 mr-2 text-accent-400" />
+              How to Start Your Project
+            </h2>
+            <ol className="list-decimal pl-6 text-light-300 space-y-2 mb-4">
+              <li>Download the generated code file.</li>
+              <li>Open it in your favorite code editor (e.g., VS Code).</li>
+              <li>Follow the comments in the code to customize and run locally.</li>
+              <li>For full-stack templates, set up backend and database as needed.</li>
+            </ol>
+            <div className="flex justify-end">
+              <Button variant="primary" onClick={() => setShowRunModal(false)}>
+                Got it!
+              </Button>
+            </div>
+          </div>
+        </div>
+      )}
     </div>
   );
 }

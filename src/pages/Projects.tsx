@@ -24,6 +24,7 @@ import { Badge } from '@/components/ui/Badge';
 import { GlassyCard } from '@/components/ui/GlassyCard';
 import { StatCard } from '@/components/ui/StatCard';
 import { PillChip } from '@/components/ui/PillChip';
+import { LikeButton } from '@/components/ui/LikeButton';
 
 export function Projects() {
   const [searchQuery, setSearchQuery] = useState('');
@@ -224,7 +225,7 @@ export function Projects() {
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
                   icon={<Search className="w-5 h-5" />}
-                  className="text-lg py-4 bg-white text-primary placeholder-dark-400 focus:border-accent-500"
+                  className="text-lg py-4 bg-dark-900 text-primary placeholder-light-400 focus:border-accent-500"
                 />
               </div>
               <Button variant="outline" size="lg" icon={<Filter className="w-5 h-5" />}>
@@ -420,13 +421,7 @@ export function Projects() {
                     {/* Stats */}
                     <div className="flex items-center justify-between pt-4 border-t border-accent-400/20">
                       <div className="flex items-center space-x-6 text-light-400">
-                        <motion.div 
-                          whileHover={{ scale: 1.1 }}
-                          className="flex items-center space-x-1"
-                        >
-                          <Heart className="w-4 h-4 text-red-500" />
-                          <span className="text-sm font-semibold">{project.votes}</span>
-                        </motion.div>
+                        <LikeButton projectId={project.id} />
                         <motion.div 
                           whileHover={{ scale: 1.1 }}
                           className="flex items-center space-x-1"

@@ -201,10 +201,10 @@ export function Home() {
                     <h3 className="text-3xl font-bold text-white mb-2">
                       {currentEvent.theme}
                     </h3>
-                    <Badge variant="secondary" size="md">
+                    <Button variant="primary" size="md" disabled className="mt-4">
                       <Clock className="w-4 h-4 mr-1" />
                       live event
-                    </Badge>
+                    </Button>
                   </div>
                 </div>
                 
@@ -460,7 +460,7 @@ export function Home() {
             className="space-y-8"
           >
             <div className="space-y-6">
-              <Badge variant="secondary" size="lg">
+              <Badge variant="primary" size="lg" glow>
                 <Code2 className="w-4 h-4 mr-2" />
                 join the movement
               </Badge>
@@ -476,9 +476,10 @@ export function Home() {
 
             <div className="flex flex-col sm:flex-row gap-4 justify-center">
               <Button 
+                variant="primary"
                 size="xl" 
-                className="bg-white text-accent-600 hover:bg-light-100 shadow-2xl w-full sm:w-auto" 
                 glow
+                className="w-full sm:w-auto"
                 onClick={() => navigate('/auth?mode=signup')}
               >
                 <Rocket className="w-6 h-6 mr-2" />

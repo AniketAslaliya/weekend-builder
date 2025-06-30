@@ -129,7 +129,6 @@ export function Auth() {
 
         // If signin successful
         if (authData.user) {
-          toast.success('🚀 Welcome back, builder!');
           // Navigate to the intended destination or home
           navigate(from !== '/auth' ? from : '/');
         }
